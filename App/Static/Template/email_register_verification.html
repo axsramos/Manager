@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Código de verificação</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3f4f6;color:#273142;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f3f4f6;">
+    <tr>
+      <td align="center" style="padding:32px 12px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background-color:#ffffff;border:1px solid #dde2e8;border-radius:6px;">
+          <tr>
+            <td style="padding:28px 32px;border-bottom:1px solid #e7ebef;">
+              <div style="font-size:20px;font-weight:bold;color:#172033;">{{app_name}}</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 18px;font-size:16px;line-height:24px;">Olá, {{recipient_name}}.</p>
+              <p style="margin:0 0 20px;font-size:15px;line-height:23px;">Use o código abaixo para continuar seu cadastro.</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 22px;">
+                <tr>
+                  <td align="center" style="background-color:#f7f9fb;border:1px solid #d8e0e7;padding:18px 12px;">
+                    <span style="font-family:Consolas,'Courier New',monospace;font-size:30px;line-height:36px;font-weight:700;letter-spacing:5px;color:#172033;">{{verification_token}}</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 12px;font-size:13px;line-height:20px;color:#5d6878;">Validade: {{expires_at}}</p>
+              <p style="margin:0;font-size:14px;line-height:22px;color:#4f5b6b;">Se você não iniciou este cadastro, ignore esta mensagem.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 32px;background-color:#f8f9fb;border-top:1px solid #e7ebef;font-size:12px;line-height:18px;color:#687384;">
+              Suporte: {{support_email}}<br>
+              &copy; {{current_year}} {{app_name}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

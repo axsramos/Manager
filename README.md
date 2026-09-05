@@ -1,28 +1,32 @@
 # Manager
 
-Sistema de gestão de contas de usuários e aplicativos
+Sistema de gestão de contas de usuários e aplicativos.
 
-<img src="https://img.shields.io/badge/license-GNU-green"><img/>
-<img src="https://img.shields.io/badge/version-0.0.0-blue"><img/>
-<img src="https://img.shields.io/badge/build-000000000000-orange"><img/>
+<img src="https://img.shields.io/badge/license-MIT-green"><img/>
+<img src="https://img.shields.io/badge/version-1.0.0-blue"><img/>
+<img src="https://img.shields.io/badge/build-260905180409-orange"><img/>
 
-Ver mais em [Changelog](./changelog.md)
+Consulte o [Changelog](./Doc/changelog.md), as [novidades da versão atual](./Doc/VERSION/1.0.0/whatsnew.md), o [documento de produto](./Doc/RFC/001-manager-plataforma-de-gestao-de-contas.md) e as [especificações técnicas](./Doc/ADR/001-arquitetura-e-operacao-do-manager.md).
 
----
+## Primeiros passos
 
-### **Visão Geral**
+Clone o repositório e acesse o diretório do projeto:
 
-O **Manager** é um sistema de gestão de contas de usuário com arquitetura **multi-tenant**, projetado para simplificar a administração de usuários em múltiplos clientes (empresas ou projetos) a partir de uma única plataforma. A plataforma centraliza o gerenciamento do ciclo de vida das contas, aumenta a segurança e otimiza a eficiência operacional.
+```bash
+git clone <URL_DO_REPOSITORIO> Manager
+cd Manager
+```
 
----
+As instruções de configuração do ambiente, instalação, carga inicial e rotinas operacionais estão no [ADR técnico](./Doc/ADR/001-arquitetura-e-operacao-do-manager.md).
 
-### **Principais Funcionalidades**
+## Visão geral
 
-* **Gerenciamento Multi-Tenant:** Administre diversos inquilinos de forma centralizada, com isolamento de dados garantido para cada cliente.
-* **Gestão do Ciclo de Vida do Usuário:** Crie, edite, suspenda e desative contas de usuário de forma simples e intuitiva.
-* **Controle de Acesso:** Atribua papéis e permissões granulares para controlar exatamente quem tem acesso a quais recursos.
-* **Auditoria e Monitoramento:** Registre e acompanhe todas as atividades dos usuários para auditorias e detecção de comportamentos suspeitos.
-* **Modo de Manutenção:** O sistema pode operar em um estado offline limitado, permitindo acesso a conteúdo estático (como downloads) durante manutenções planejadas do banco de dados.
-* **Autenticação Avançada (Em Breve):** Estamos implementando mecanismos de autenticação mais robustos, como a Autenticação de Dois Fatores (2FA).
+O Manager centraliza a gestão do ciclo de vida de contas de usuários e dos aplicativos associados a cada cliente. A plataforma apoia organizações que precisam administrar acessos, responsabilidades e serviços de forma consistente, com visão centralizada e regras adequadas a cada contexto de uso.
 
----
+## Principais funcionalidades
+
+- Gestão centralizada de contas e aplicativos para múltiplos clientes.
+- Controle de acesso por perfis e permissões.
+- Acompanhamento do ciclo de vida das contas, incluindo confirmação de e-mail, recuperação de acesso e bloqueios.
+- Registro de atividades para auditoria e acompanhamento operacional.
+- Recursos de manutenção para preservar a continuidade do serviço.

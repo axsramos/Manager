@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{app_name}}</title>
+</head>
+
+<body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, Helvetica, sans-serif; color: #1f2933;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; background-color: #f4f6f8;">
+        <tr>
+            <td align="center" style="padding: 24px 12px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; max-width: 600px; width: 100%;">
+                    <tr>
+                        <td style="background-color: #263238; padding: 22px 28px; text-align: center;">
+                            <h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; color: #ffffff;">{{app_name}}</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ffffff; padding: 32px 28px; border: 1px solid #e1e7ec; border-top: 0;">
+                            <h2 style="margin: 0 0 18px 0; font-size: 22px; line-height: 30px; font-weight: 600; color: #1f2933;">Ol&aacute;, {{recipient_name}}!</h2>
+
+                            <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 24px; color: #3d4a57;">
+                                Recebemos uma solicita&ccedil;&atilde;o para redefinir sua senha.
+                            </p>
+
+                            <p style="margin: 0 0 18px 0; font-size: 15px; line-height: 24px; color: #3d4a57;">
+                                Informe o c&oacute;digo abaixo na tela de redefini&ccedil;&atilde;o de senha:
+                            </p>
+
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; margin: 0 0 22px 0;">
+                                <tr>
+                                    <td align="center" style="background-color: #f7f9fb; border: 1px solid #d8e0e7; padding: 18px 12px;">
+                                        <span style="font-family: Consolas, 'Courier New', monospace; font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: 4px; color: #1f2933;">{{access_token}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 22px; color: #5a6773;">
+                                Se voc&ecirc; n&atilde;o solicitou a redefini&ccedil;&atilde;o, ignore este e-mail.
+                            </p>
+
+                            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 22px; color: #5a6773;">
+                                Em caso de d&uacute;vida, entre em contato pelo e-mail
+                                <a href="mailto:{{support_email}}" style="color: #1f4f82; text-decoration: underline;">{{support_email}}</a>.
+                            </p>
+
+                            <p style="margin: 24px 0 0 0; font-size: 15px; line-height: 24px; color: #3d4a57;">
+                                Atenciosamente,<br>
+                                Equipe {{app_name}}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 18px 28px; text-align: center; font-size: 12px; line-height: 18px; color: #7b8794;">
+                            Esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.<br>
+                            Copyright &copy; {{current_year}} {{app_name}}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

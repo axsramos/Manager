@@ -1,0 +1,35 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Do not expose directory listings when the server enables Indexes.
+Options -Indexes
+
+# Deny direct access to repository metadata and application logs.
+RewriteRule ^\.git(?:/|$) - [F,L,NC]
+RewriteRule ^Temp/Logs(?:/|$) - [F,L,NC]
+
+# Maintenance scripts must be executed only from the command line.
+RewriteRule ^(?:activate-verified-users|cleanup-logs|cleanup-unconfirmed-accounts|configure|migrate|seed)\.php$ - [F,L,NC]
+
+<FilesMatch "\.log$">
+    Require all denied
+</FilesMatch>
+
+# Redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Handle index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+# Deny access to .htaccess itself
+<Files .htaccess>
+    Require all denied
+</Files>
+
+# Deny access to environment files, including temporary and backup variants.
+<FilesMatch "^\.env.*$">
+    Require all denied
+</FilesMatch>

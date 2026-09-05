@@ -1,0 +1,13 @@
+# Componentes de terceiros
+
+## PHPMailer 6.12.0
+
+- Projeto: PHPMailer
+- Autores: Marcus Bointon, Jim Jagielski, Andy Prevost e Brent R. Matzelle
+- Código-fonte: https://github.com/PHPMailer/PHPMailer/tree/v6.12.0
+- Licença: GNU Lesser General Public License v2.1 only (`LGPL-2.1-only`)
+- Texto integral da licença: `vendor/phpmailer/phpmailer/LICENSE`
+
+O Manager é licenciado sob MIT. O PHPMailer permanece sujeito à sua própria
+licença LGPL-2.1-only e os respectivos avisos e texto de licença devem ser
+preservados em toda distribuição que inclua essa dependência.
