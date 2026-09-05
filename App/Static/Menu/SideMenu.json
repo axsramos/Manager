@@ -1,0 +1,155 @@
+{
+    "SideMenu": [
+        {
+            "Description": "PRINCIPAL",
+            "Items": [
+                {
+                    "Description": "Home",
+                    "Icon": "fas fa-home",
+                    "Link": "/Home",
+                    "SubItems": []
+                },
+                {
+                    "Description": "Dashboard",
+                    "Icon": "fas fa-tachometer-alt",
+                    "Link": "/Manager/Dashboard",
+                    "SubItems": []
+                }
+            ]
+        },
+        {
+            "Description": "PORTAL SITI",
+            "Items": [
+                {
+                    "Description": "Manager",
+                    "Icon": "fas fa-project-diagram",
+                    "Link": "",
+                    "Anchor": "Manager",
+                    "SubItems": [
+                        {
+                            "Description": "Aplicativo",
+                            "Icon": "fas fa-rocket",
+                            "Link": "/Manager/Aplicativo",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Repositório",
+                            "Icon": "fas fa-box-open",
+                            "Link": "/Manager/Repositorio",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Token",
+                            "Icon": "fas fa-key",
+                            "Link": "/Manager/Token",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Tipo de Usuário",
+                            "Icon": "fa-solid fa-user-tag",
+                            "Link": "/Manager/TipoDeUsuario",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Usuário",
+                            "Icon": "fas fa-user",
+                            "Link": "/Manager/Usuario",
+                            "SubItems": []
+                        }
+                    ]
+                },
+                {
+                    "Description": "Settings",
+                    "Icon": "fas fa-cog",
+                    "Link": "",
+                    "Anchor": "Settings",
+                    "SubItems": [
+                        {
+                            "Description": "Funcionalidade",
+                            "Icon": "fas fa-magic",
+                            "Link": "/Manager/Funcionalidade",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Menu",
+                            "Icon": "fas fa-bars",
+                            "Link": "/Manager/Menu",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Módulo",
+                            "Icon": "fas fa-object-group",
+                            "Link": "/Manager/Modulo",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Parâmetro",
+                            "Icon": "fas fa-cogs",
+                            "Link": "/Manager/Parametro",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Programa",
+                            "Icon": "fas fa-desktop",
+                            "Link": "/Manager/Programa",
+                            "SubItems": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Description": "CONTROLE DE ACESSO",
+            "Items": [
+                {
+                    "Description": "Log",
+                    "Icon": "fas fa-history",
+                    "Link": "",
+                    "Anchor": "Log",
+                    "SubItems": [
+                        {
+                            "Description": "Do Sistema",
+                            "Icon": "",
+                            "Link": "/Manager/LogSystem",
+                            "SubItems": []
+                        }
+                    ]
+                },
+                {
+                    "Description": "Perfil",
+                    "Icon": "far fa-address-card",
+                    "Link": "",
+                    "Anchor": "Perfil",
+                    "SubItems": [
+                        {
+                            "Description": "De Acesso",
+                            "Icon": "",
+                            "Link": "/Manager/PerfilDeAcesso",
+                            "SubItems": []
+                        },
+                        {
+                            "Description": "Meu Perfil",
+                            "Icon": "",
+                            "Link": "/Manager/MeuPerfil",
+                            "SubItems": []
+                        }
+                    ]
+                },
+                {
+                    "Description": "Regras",
+                    "Icon": "fas fa-gavel",
+                    "Link": "",
+                    "Anchor": "Regras",
+                    "SubItems": [
+                        {
+                            "Description": "De Acesso",
+                            "Icon": "",
+                            "Link": "/Manager/RegrasDeAcesso",
+                            "SubItems": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Models\CAS;
+
+use App\Core\Database;
+use App\Metadata\CAS\CasPfiMD;
+use App\Models\Traits\CrudOperationsTrait;
+
+class CasPfiModel extends CasPfiMD
+{
+    use CrudOperationsTrait;
+
+    /**
+     * Attributes
+     */
+    private $att;
+
+    /**
+     * Controls
+     */
+    private $cnx;
+    private $tbl = 'CasPfi';
+    private $selectedFields = array();
+    private $queryOrder = '';
+    private $dataRows = array();
+    public $isDuplicated = false;
+    public $referencedTables = array();
+
+    public function __construct()
+    {
+        $this->cnx = new Database();
+
+        $this->att = [];
+        foreach (static::FIELDS_MD as $key => $value) {
+            $this->att[$key] = $value['Default'] ?? null;
+        }
+
+        $this->setSelectedFields();
+    }
+
+    /**
+     * GET
+     */
+    public function __get(string $name): mixed
+    {
+        if (in_array($name, static::FIELDS)) {
+            return $this->att[$name] ?? null;
+        } else {
+            return null;
+        }
+
+    }
+
+    public function getRecords(): array
+    {
+        return $this->dataRows;
+    }
+
+    /**
+     * SET
+     */
+    public function __set(string $name, mixed $value): void
+    {
+        if (in_array($name, static::FIELDS)) {
+            $this->att[$name] = $value;
+        }
+    }
+
+    public function setSelectedIndex(int | null $index = null): void
+    {
+        $index = $index ?? 0;
+
+        if (isset(static::TABLE_IDX[$index])) {
+            $orderFields = static::TABLE_IDX[$index][0] ?? [];
+            if (!empty($orderFields)) {
+                $this->queryOrder = implode(', ', $orderFields);
+            } else {
+                $this->queryOrder = '';
+            }
+        } else {
+            $this->queryOrder = '';
+            /**
+             * LogErros
+             */
+            $msg_err = "Índice de tabela inválido fornecido: {$index}";
+            $logData = array('program' => __FILE__, 'line' => __LINE__, 'message'=> $msg_err);
+            Database::setLog(json_encode($logData), 'trigger_error', 'Runtime');
+            // end LogErros
+        }
+    }
+
+    /**
+     * Others
+     */
+    private function defaultValuesForNotNulls($dtnow_str)
+    {
+        if (empty($this->att['CasPfiBlq'])) {
+            $this->att['CasPfiBlq'] = 'N';
+        }
+        if ($this->att['CasPfiBlq'] == 'N') {
+            $this->att['CasPfiBlqDtt'] = null;
+        }
+        if ($this->att['CasPfiBlq'] == 'S' && empty($this->att['CasPfiBlqDtt'])) {
+            $this->att['CasPfiBlqDtt'] = $dtnow_str;
+        }
+    }
+}

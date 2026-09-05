@@ -1,0 +1,22 @@
+{
+    "UserMenu": [
+        {
+            "Sequence": 1,
+            "Description": "Home",
+            "Icon": "<i class='fas fa-home mr-2'></i>",
+            "Link": "/Home"
+        },
+        {
+            "Sequence": 3,
+            "Description": "**[SEPARATOR]**!",
+            "Icon": "",
+            "Link": "#"
+        },
+        {
+            "Sequence": 4,
+            "Description": "Entrar",
+            "Icon": "<i class='fas fa-sign-in-alt mr-2'></i>",
+            "Link": "/Auth/Login"
+        }
+    ]
+}

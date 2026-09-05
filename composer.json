@@ -1,0 +1,23 @@
+{
+  "name": "axsra/manager",
+  "description": "Project Manager",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "App\\": "App/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alex Ramos",
+      "email": "axsramos@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "phpmailer/phpmailer": "^6.10"
+  }
+}

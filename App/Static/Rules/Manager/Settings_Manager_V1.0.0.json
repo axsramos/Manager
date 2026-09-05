@@ -1,0 +1,619 @@
+{
+    "ProductKey": "vHYbB3Fm6goJFMpAx7TIkW30Ej-5GwWO",
+    "ProductName": "Manager",
+    "Version": "1.0.0",
+    "Description": "Pacote de instalações para o Manager. Configuraçöes de funcionalidades, programas, perfis e autorizações iniciais.",
+    "CoverImage": "/SBAdmin/images/emblem-small.jpg",
+    "Overview": "<p>Manager: Controle Total dos Seus Aplicativos.</p><p>O Manager é a sua central de comando exclusiva. Desenvolvido para simplificar a gestão do seu dia a dia, ele oferece uma experiência completa para você:</p><p>Acompanhe seus aplicativos: Tenha uma visão clara e organizada de todos os aplicativos que você contratou. Saiba o status, datas de vencimento e detalhes importantes de cada um, tudo em um só lugar.</p><p>Suporte ágil e direto: Precisa de ajuda? Solicite atendimento de suporte de forma rápida e descomplicada, garantindo que suas dúvidas e necessidades sejam resolvidas com eficiência.</p><p>Mantenha-se atualizado: Fique por dentro das últimas novidades, atualizações e recursos adicionais da plataforma. Não perca nenhuma melhoria que possa otimizar ainda mais sua experiência.</p><p>Com o Manager, você tem transparência, agilidade e controle sobre seus serviços, garantindo que você aproveite ao máximo tudo o que oferecemos.</p",
+    "RunScript": "ApplyApplicationSettings",
+    "Packages": [
+        {
+            "Task": 1,
+            "Date": "2025-06-22",
+            "Description": "Cadastro das funcionalidades. Ações realizadas por programas."
+        },
+        {
+            "Task": 2,
+            "Date": "2025-06-22",
+            "Description": "Cadastro dos módulos para adminstração do suporte ao produto Manager."
+        },
+        {
+            "Task": 3,
+            "Date": "2025-06-22",
+            "Description": "Cadastro dos programas de adminstração do Manager."
+        },
+        {
+            "Task": 4,
+            "Date": "2025-06-22",
+            "Description": "Cadastro das parametrizações do sistema."
+        },
+        {
+            "Task": 5,
+            "Date": "2025-06-22",
+            "Description": "Cadastro dos programas vinculados as funcionalidades."
+        },
+        {
+            "Task": 6,
+            "Date": "2025-06-22",
+            "Description": "Cadastro dos programas vinculados aos módulos do sistema."
+        },
+        {
+            "Task": 7,
+            "Date": "2025-06-22",
+            "Description": "Cadastro do menu raiz para acesso ao painel de controles do usuário (CONTROL_PANEL)."
+        },
+        {
+            "Task": 8,
+            "Date": "2025-06-22",
+            "Description": "Cadastro da árvore de menu para acessao ao painel (Meu Perfil)."
+        },
+        {
+            "Task": 9,
+            "Date": "2025-06-22",
+            "Description": "Cadastro do perfil de acesso para usuarios do suporte ao produto, usuário do sistema e administrador do repositório local."
+        },
+        {
+            "Task": 10,
+            "Date": "2025-06-22",
+            "Description": "Cadastro do perfil (USER) aos usuários do sistema e (SUPPORT) ao usuário de suporte ao produto Manager."
+        },
+        {
+            "Task": 11,
+            "Date": "2025-06-22",
+            "Description": "Cadastro da autorização do perfil do usuário de suporte (SUPPORT) e do usuario do sistema (USER)."
+        },
+        {
+            "Task": 12,
+            "Date": "2025-06-22",
+            "Description": "Cadastro da autorização das funcionalidades por perfil do usuário de suporte (SUPPORT) e do usuario do sistema (USER)."
+        },
+        {
+            "Task": 13,
+            "Date": "2025-06-22",
+            "Description": "Cadastro da autorização do terminal do usuário."
+        }
+    ],
+    "BaseTableData": [
+        {
+            "CasFun": [
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasFunDsc": "Autorizado",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "CREATE",
+                    "CasFunDsc": "Novo",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "READER",
+                    "CasFunDsc": "Visualizar",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "UPDATE",
+                    "CasFunDsc": "Atualizar",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "DELETE",
+                    "CasFunDsc": "Exluir",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "DISPLAY",
+                    "CasFunDsc": "Exibir",
+                    "CasFunBlq": "N"
+                },
+                {
+                    "CasFunCod": "PRINT",
+                    "CasFunDsc": "Imprimir",
+                    "CasFunBlq": "S"
+                },
+                {
+                    "CasFunCod": "REPORT",
+                    "CasFunDsc": "Relatório",
+                    "CasFunBlq": "S"
+                },
+                {
+                    "CasFunCod": "EXPORT",
+                    "CasFunDsc": "Exportar",
+                    "CasFunBlq": "S"
+                }
+            ]
+        },
+        {
+            "CasMdl": [
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasMdlDsc": "Gestão de Usuários",
+                    "CasMdlBlq": "N"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasMdlDsc": "Configurações",
+                    "CasMdlBlq": "N"
+                },
+                {
+                    "CasMdlCod": "ACCESS_CONTROL",
+                    "CasMdlDsc": "Controle de Acesso",
+                    "CasMdlBlq": "N"
+                }
+            ]
+        },
+        {
+            "CasPrg": [
+                {
+                    "CasPrgCod": "_blank",
+                    "CasPrgDsc": "_blank",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Aplicativo",
+                    "CasPrgDsc": "Aplicativo",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Dashboard",
+                    "CasPrgDsc": "Dashboard",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Funcionalidade",
+                    "CasPrgDsc": "Funcionalidade",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Menu",
+                    "CasPrgDsc": "Menu",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Modulo",
+                    "CasPrgDsc": "Módulo",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Parametro",
+                    "CasPrgDsc": "Parâmetro",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Programa",
+                    "CasPrgDsc": "Programa",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Repositorio",
+                    "CasPrgDsc": "Repositório",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "TipoDeUsuario",
+                    "CasPrgDsc": "Tipo de Usuário",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Token",
+                    "CasPrgDsc": "Token",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Usuario",
+                    "CasPrgDsc": "Usuário",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "LogSystem",
+                    "CasPrgDsc": "Log do Sistema",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "PerfilDeAcesso",
+                    "CasPrgDsc": "Perfil de Acesso",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "RegrasDeAcesso",
+                    "CasPrgDsc": "Regras de Acesso",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "MeuPerfil",
+                    "CasPrgDsc": "Meu Perfil",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                }
+            ]
+        },
+        {
+            "CasPar": []
+        },
+        {
+            "CasFpr": [
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "_blank"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Aplicativo"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Dashboard"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Funcionalidade"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Menu"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Modulo"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Parametro"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Programa"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Repositorio"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "TipoDeUsuario"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Token"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Usuario"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "LogSystem"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "PerfilDeAcesso"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "RegrasDeAcesso"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "MeuPerfil"
+                }
+            ]
+        },
+        {
+            "CasMpr": [
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasPrgCod": "Aplicativo"
+                },
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasPrgCod": "Repositorio"
+                },
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasPrgCod": "Token"
+                },
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasPrgCod": "TipoDeUsuario"
+                },
+                {
+                    "CasMdlCod": "MANAGER",
+                    "CasPrgCod": "Usuario"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasPrgCod": "Funcionalidade"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasPrgCod": "Menu"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasPrgCod": "Modulo"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasPrgCod": "Parametro"
+                },
+                {
+                    "CasMdlCod": "SETTINGS",
+                    "CasPrgCod": "Programa"
+                },
+                {
+                    "CasMdlCod": "ACCESS_CONTROL",
+                    "CasPrgCod": "LogSystem"
+                },
+                {
+                    "CasMdlCod": "ACCESS_CONTROL",
+                    "CasPrgCod": "PerfilDeAcesso"
+                },
+                {
+                    "CasMdlCod": "ACCESS_CONTROL",
+                    "CasPrgCod": "RegrasDeAcesso"
+                },
+                {
+                    "CasMdlCod": "ACCESS_CONTROL",
+                    "CasPrgCod": "MeuPerfil"
+                }
+            ]
+        },
+        {
+            "CasMnu": [
+                {
+                    "CasMnuCod": "CONTROL_PANEL",
+                    "CasMnuDsc": "PAINEL DE CONTROLE",
+                    "CasMnuBlq": "N",
+                    "CasMnuGrp": "CONTROL_PANEL"
+                }
+            ]
+        },
+        {
+            "CasMna": [
+                {
+                    "CasMnuCod": "CONTROL_PANEL",
+                    "CasMnaCod": "CONTROL_PANEL_PROFILE",
+                    "CasPrgCod": "MeuPerfil",
+                    "CasMnaDsc": "Meu Perfil",
+                    "CasMnaBlq": "N",
+                    "CasMnaLnk": "/Manager/MeuPerfil",
+                    "CasMnaIco": "far fa-address-card",
+                    "CasMnaGrp": "Meu Perfil"
+                }
+            ]
+        },
+        {
+            "CasPfi": [
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasPfiDsc": "Suporte",
+                    "CasPfiBlq": "N"
+                },
+                {
+                    "CasPfiCod": "USER",
+                    "CasPfiDsc": "Usuário",
+                    "CasPfiBlq": "N"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasPfiDsc": "Administrador",
+                    "CasPfiBlq": "S"
+                }
+            ]
+        },
+        {
+            "CasPfu": [
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": ""
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "4cf89428c8e87070dac8704667445c5f"
+                }
+            ]
+        },
+        {
+            "CasApf": [
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "_blank"
+                },
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Dashboard"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Aplicativo"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Funcionalidade"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Menu"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Modulo"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Parametro"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Programa"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Repositorio"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "TipoDeUsuario"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Token"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Usuario"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "LogSystem"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "PerfilDeAcesso"
+                },
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "MeuPerfil"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "RegrasDeAcesso"
+                }
+            ]
+        },
+        {
+            "CasAfu": [
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "_blank",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Dashboard",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Aplicativo",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Funcionalidade",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Menu",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Modulo",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Parametro",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Programa",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Repositorio",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "TipoDeUsuario",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Token",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "SUPPORT",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Usuario",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "LogSystem",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "PerfilDeAcesso",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "ADMIN",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "RegrasDeAcesso",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "USER",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "MeuPerfil",
+                    "CasFunCod": "AUTHORIZED"
+                }
+            ]
+        },
+        {
+            "CasWks": []
+        }
+    ]
+}
