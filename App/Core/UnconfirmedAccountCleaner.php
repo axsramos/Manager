@@ -15,10 +15,7 @@ final class UnconfirmedAccountCleaner
     public function __construct(string $storage = 'Default')
     {
         Config::getInstance();
-        if (!isset(Config::$DB_STORAGE[$storage])) {
-            throw new RuntimeException("Storage de banco de dados invalido: {$storage}");
-        }
-        $config = Config::$DB_STORAGE[$storage];
+        $config = Config::getDbStorage($storage);
         $this->database = $config['DB_DATABASE'];
         $dsn = "mysql:host={$config['DB_HOST']};dbname={$config['DB_DATABASE']};port={$config['DB_PORT']};charset={$config['DB_CHARSET']}";
         $this->pdo = new PDO($dsn, $config['DB_USERNAME'], $config['DB_PASSWORD'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);

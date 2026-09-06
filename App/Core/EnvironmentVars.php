@@ -78,6 +78,17 @@ class EnvironmentVars
             'DB_COLLATION' => 'utf8mb4_unicode_ci',
             'DB_PREFIX' => 'tb_',
 
+            // database SAAS //
+            'SAAS_DB_CONNECTION' => self::DATABASE_CONNECTION,
+            'SAAS_DB_HOST' => '127.0.0.1',
+            'SAAS_DB_PORT' => '3306',
+            'SAAS_DB_DATABASE' => 'mysql',
+            'SAAS_DB_USERNAME' => 'root',
+            'SAAS_DB_PASSWORD' => '',
+            'SAAS_DB_CHARSET' => 'utf8mb4',
+            'SAAS_DB_COLLATION' => 'utf8mb4_unicode_ci',
+            'SAAS_DB_PREFIX' => 'saas_',
+
             // mail //
             'MAIL_SERVICE' => false,
             'MAIL_MAILER' => 'log',
@@ -124,6 +135,12 @@ class EnvironmentVars
         $envs['DB_PASSWORD'] = '';
         $envs['DB_PREFIX'] = 'mng_';
 
+        // database SAAS //
+        $envs['SAAS_DB_DATABASE'] = 'manager_saas_local';
+        $envs['SAAS_DB_USERNAME'] = 'root';
+        $envs['SAAS_DB_PASSWORD'] = '';
+        $envs['SAAS_DB_PREFIX'] = 'saas_';
+
         return $envs;
     }
 
@@ -153,6 +170,12 @@ class EnvironmentVars
         $envs['DB_PASSWORD'] = '';
         $envs['DB_PREFIX'] = 'mng_';
 
+        // database SAAS //
+        $envs['SAAS_DB_DATABASE'] = 'manager_saas_staging';
+        $envs['SAAS_DB_USERNAME'] = 'root';
+        $envs['SAAS_DB_PASSWORD'] = '';
+        $envs['SAAS_DB_PREFIX'] = 'saas_';
+
         return $envs;
     }
 
@@ -181,6 +204,12 @@ class EnvironmentVars
         $envs['DB_USERNAME'] = 'root';
         $envs['DB_PASSWORD'] = '';
         $envs['DB_PREFIX'] = 'mng_';
+
+        // database SAAS //
+        $envs['SAAS_DB_DATABASE'] = 'db_manager_saas';
+        $envs['SAAS_DB_USERNAME'] = 'root';
+        $envs['SAAS_DB_PASSWORD'] = '';
+        $envs['SAAS_DB_PREFIX'] = 'saas_';
 
         return $envs;
     }

@@ -19,6 +19,21 @@ cd Manager
 
 As instruções de configuração do ambiente, instalação, carga inicial e rotinas operacionais estão no [ADR técnico](./Doc/ADR/001-arquitetura-e-operacao-do-manager.md).
 
+## Conexões de banco
+
+O projeto usa somente MySQL. A conexão principal `Default` continua usando as variáveis `DB_*` e atende o Manager, autenticação, usuários, repositórios e tabelas CAS.
+
+Mini projetos SaaS usam conexões separadas. A conexão inicial é `SAAS`, configurada por `SAAS_DB_*`, permitindo que a aplicação consulte `Default` e `SAAS` na mesma execução sem misturar schemas.
+
+Exemplos:
+
+```bash
+php migrate.php --storage=Default --module=CAS
+php migrate.php --storage=SAAS --module=CTR
+```
+
+Quando `--module` não é informado, o padrão continua sendo `CAS`.
+
 ## Visão geral
 
 O Manager centraliza a gestão do ciclo de vida de contas de usuários e dos aplicativos associados a cada cliente. A plataforma apoia organizações que precisam administrar acessos, responsabilidades e serviços de forma consistente, com visão centralizada e regras adequadas a cada contexto de uso.

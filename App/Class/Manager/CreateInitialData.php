@@ -30,9 +30,7 @@ class CreateInitialData
         if ($this->storage !== 'Default') {
             throw new RuntimeException('A carga atual usa os models do storage Default; informe --storage=Default.');
         }
-        if (! isset(Config::$DB_STORAGE[$this->storage])) {
-            throw new RuntimeException("O storage {$this->storage} não está configurado.");
-        }
+        Config::getDbStorage($this->storage);
         foreach (['APP_KEY' => Config::$APP_KEY, 'APP_NAME' => Config::$APP_NAME, 'APP_VERSION' => Config::$APP_VERSION] as $key => $value) {
             if (trim((string) $value) === '') {
                 throw new RuntimeException("A variável {$key} não foi configurada.");
@@ -48,7 +46,7 @@ class CreateInitialData
         );
         foreach (self::REQUIRED_TABLES as $table) {
             $statement->execute([
-                'schema' => Config::$DB_STORAGE[$this->storage]['DB_DATABASE'],
+                'schema' => Config::getDbStorageDatabase($this->storage),
                 'table' => $table,
             ]);
             if ((int) $statement->fetchColumn() !== 1) {
@@ -293,7 +291,7 @@ SQL;
 
     private function connect(): PDO
     {
-        $config = Config::$DB_STORAGE[$this->storage];
+        $config = Config::getDbStorage($this->storage);
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             $config['DB_HOST'],

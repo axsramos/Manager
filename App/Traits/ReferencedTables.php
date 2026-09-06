@@ -8,13 +8,13 @@ use PDO;
 
 trait ReferencedTables
 {
-    public static function getReferencedTables(string $tableName, string $fieldName): array
+    public static function getReferencedTables(string $tableName, string $fieldName, string $storage = 'Default'): array
     {
-        $database = Config::$DB_STORAGE['Default']['DB_DATABASE'];
+        $database = Config::getDbStorageDatabase($storage);
         $tables = [];
         $parameters = [];
 
-        $cnx = new Database();
+        $cnx = new Database($storage);
 
         /**
          * Query read
@@ -35,7 +35,7 @@ trait ReferencedTables
         /**
          * Run query
          */
-        $stmt = $cnx->executeQuery($qry, $parameters);
+        $stmt = $cnx->executeQuery(static::class, $qry, $parameters);
         $dataRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($dataRows) {
@@ -47,12 +47,12 @@ trait ReferencedTables
         return $tables;
     }
 
-    public static function isEmptyAllReferencialTables(string $tableName, string $fieldName, array $fieldsKeys, array $fieldsValues): bool
+    public static function isEmptyAllReferencialTables(string $tableName, string $fieldName, array $fieldsKeys, array $fieldsValues, string $storage = 'Default'): bool
     {
 
-        $referencedTables = self::getReferencedTables($tableName, $fieldName);
+        $referencedTables = self::getReferencedTables($tableName, $fieldName, $storage);
 
-        $cnx = new Database();
+        $cnx = new Database($storage);
         $rows = 0;
 
         foreach ($referencedTables as $refTable) {
@@ -77,7 +77,7 @@ trait ReferencedTables
             /**
              * Run query
              */
-            $stmt = $cnx->executeQuery($qry, $parameters);
+            $stmt = $cnx->executeQuery(static::class, $qry, $parameters);
             $rows = $stmt->fetchColumn();
             if ($rows > 0) {
                 break;

@@ -96,33 +96,7 @@ class Config
             'ACCOUNT_ACTIVATION_HOURS'
         );
 
-        /**
-         * Database Default
-         */
-        self::$DB_STORAGE = array(
-            'Default' => array(
-                'DB_CONNECTION' => self::$envs['DB_CONNECTION'],
-                'DB_HOST' => self::$envs['DB_HOST'],
-                'DB_PORT' => self::$envs['DB_PORT'],
-                'DB_DATABASE' => self::$envs['DB_DATABASE'],
-                'DB_USERNAME' => self::$envs['DB_USERNAME'],
-                'DB_PASSWORD' => self::$envs['DB_PASSWORD'],
-                'DB_CHARSET' => self::$envs['DB_CHARSET'],
-                'DB_COLLATION' => self::$envs['DB_COLLATION'],
-                'DB_PREFIX' => self::$envs['DB_PREFIX'],
-            ),
-            'SAAS' => array(
-                'DB_CONNECTION' => self::$envs['DB_CONNECTION'],
-                'DB_HOST' => self::$envs['DB_HOST'],
-                'DB_PORT' => self::$envs['DB_PORT'],
-                'DB_DATABASE' => self::$envs['DB_DATABASE'],
-                'DB_USERNAME' => self::$envs['DB_USERNAME'],
-                'DB_PASSWORD' => self::$envs['DB_PASSWORD'],
-                'DB_CHARSET' => self::$envs['DB_CHARSET'],
-                'DB_COLLATION' => self::$envs['DB_COLLATION'],
-                'DB_PREFIX' => self::$envs['DB_PREFIX'],
-            ),
-        );
+        self::$DB_STORAGE = self::buildDatabaseStorage();
 
         /**
          * Define Service Mail
@@ -153,6 +127,25 @@ class Config
             self::$instance = new Config();
         }
         return self::$instance;
+    }
+
+    public static function getDbStorage(string $storage = 'Default'): array
+    {
+        self::getInstance();
+
+        $storage = trim($storage);
+        if ($storage === '' || ! isset(self::$DB_STORAGE[$storage])) {
+            throw new \RuntimeException("Storage de banco de dados inválido: {$storage}");
+        }
+
+        self::validateDbStorage($storage, self::$DB_STORAGE[$storage], true);
+
+        return self::$DB_STORAGE[$storage];
+    }
+
+    public static function getDbStorageDatabase(string $storage = 'Default'): string
+    {
+        return self::getDbStorage($storage)['DB_DATABASE'];
     }
 
     public static function getPageGroup(): array
@@ -389,19 +382,8 @@ class Config
 
     private static function validateRequiredConfig(string $environment): void
     {
-        $databaseConnection = strtolower(trim((string) self::$envs['DB_CONNECTION']));
-
-        if ($databaseConnection !== EnvironmentVars::DATABASE_CONNECTION) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Conexão de banco de dados não suportada: %s. Utilize somente %s.',
-                    self::$envs['DB_CONNECTION'],
-                    EnvironmentVars::DATABASE_CONNECTION
-                )
-            );
-        }
-
-        self::$envs['DB_CONNECTION'] = $databaseConnection;
+        self::$envs['DB_CONNECTION'] = self::normalizeDatabaseConnection('Default', self::$envs['DB_CONNECTION']);
+        self::$envs['SAAS_DB_CONNECTION'] = self::normalizeDatabaseConnection('SAAS', self::$envs['SAAS_DB_CONNECTION']);
 
         foreach (['APP_URL', 'API_MANAGER_URL'] as $key) {
             if (! filter_var(self::$envs[$key], FILTER_VALIDATE_URL)) {
@@ -440,6 +422,65 @@ class Config
                 }
             }
         }
+    }
+
+    private static function buildDatabaseStorage(): array
+    {
+        return [
+            'Default' => [
+                'DB_CONNECTION' => self::$envs['DB_CONNECTION'],
+                'DB_HOST' => self::$envs['DB_HOST'],
+                'DB_PORT' => self::$envs['DB_PORT'],
+                'DB_DATABASE' => self::$envs['DB_DATABASE'],
+                'DB_USERNAME' => self::$envs['DB_USERNAME'],
+                'DB_PASSWORD' => self::$envs['DB_PASSWORD'],
+                'DB_CHARSET' => self::$envs['DB_CHARSET'],
+                'DB_COLLATION' => self::$envs['DB_COLLATION'],
+                'DB_PREFIX' => self::$envs['DB_PREFIX'],
+            ],
+            'SAAS' => [
+                'DB_CONNECTION' => self::$envs['SAAS_DB_CONNECTION'],
+                'DB_HOST' => self::$envs['SAAS_DB_HOST'],
+                'DB_PORT' => self::$envs['SAAS_DB_PORT'],
+                'DB_DATABASE' => self::$envs['SAAS_DB_DATABASE'],
+                'DB_USERNAME' => self::$envs['SAAS_DB_USERNAME'],
+                'DB_PASSWORD' => self::$envs['SAAS_DB_PASSWORD'],
+                'DB_CHARSET' => self::$envs['SAAS_DB_CHARSET'],
+                'DB_COLLATION' => self::$envs['SAAS_DB_COLLATION'],
+                'DB_PREFIX' => self::$envs['SAAS_DB_PREFIX'],
+            ],
+        ];
+    }
+
+    private static function validateDbStorage(string $storage, array $config, bool $strict): void
+    {
+        self::normalizeDatabaseConnection($storage, $config['DB_CONNECTION'] ?? '');
+
+        foreach (['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_CHARSET', 'DB_COLLATION'] as $key) {
+            if ($strict && trim((string) ($config[$key] ?? '')) === '') {
+                throw new \RuntimeException("A configuração {$key} do storage {$storage} não foi definida.");
+            }
+        }
+
+        self::toPositiveInt($config['DB_PORT'] ?? null, "{$storage}.DB_PORT");
+    }
+
+    private static function normalizeDatabaseConnection(string $storage, mixed $connection): string
+    {
+        $databaseConnection = strtolower(trim((string) $connection));
+
+        if ($databaseConnection !== EnvironmentVars::DATABASE_CONNECTION) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Conexão de banco de dados não suportada no storage %s: %s. Utilize somente %s.',
+                    $storage,
+                    (string) $connection,
+                    EnvironmentVars::DATABASE_CONNECTION
+                )
+            );
+        }
+
+        return $databaseConnection;
     }
 
     private static function toBool(mixed $value, string $key): bool

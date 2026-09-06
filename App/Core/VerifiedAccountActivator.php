@@ -19,11 +19,7 @@ final class VerifiedAccountActivator
     {
         Config::getInstance();
 
-        if (!isset(Config::$DB_STORAGE[$storage])) {
-            throw new RuntimeException("Storage de banco de dados inválido: {$storage}");
-        }
-
-        $config = Config::$DB_STORAGE[$storage];
+        $config = Config::getDbStorage($storage);
         $dsn = "mysql:host={$config['DB_HOST']};dbname={$config['DB_DATABASE']};port={$config['DB_PORT']};charset={$config['DB_CHARSET']}";
         $this->pdo = new PDO($dsn, $config['DB_USERNAME'], $config['DB_PASSWORD'], [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

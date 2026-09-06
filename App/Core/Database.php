@@ -4,6 +4,7 @@ namespace App\Core;
 
 use PDO;
 use App\Core\Config;
+use RuntimeException;
 
 class Database extends PDO
 {
@@ -15,29 +16,48 @@ class Database extends PDO
   private $DB_USER = null;
   private $DB_PASSWORD = null;
   private $DB_CHARSET = null;
+  private string $storage;
 
   private $conn;
 
   public function __construct($storage = 'Default')
   {
-    // mysql //
-    $this->DB_HOST = Config::$DB_STORAGE[$storage]['DB_HOST'];
-    $this->DB_PORT = Config::$DB_STORAGE[$storage]['DB_PORT'];
-    $this->DB_NAME = Config::$DB_STORAGE[$storage]['DB_DATABASE'];
-    $this->DB_USER = Config::$DB_STORAGE[$storage]['DB_USERNAME'];
-    $this->DB_PASSWORD = Config::$DB_STORAGE[$storage]['DB_PASSWORD'];
-    $this->DB_CHARSET = Config::$DB_STORAGE[$storage]['DB_CHARSET'];
+    $this->storage = $storage;
 
     try {
+      $config = Config::getDbStorage($storage);
+      $this->DB_HOST = $config['DB_HOST'];
+      $this->DB_PORT = $config['DB_PORT'];
+      $this->DB_NAME = $config['DB_DATABASE'];
+      $this->DB_USER = $config['DB_USERNAME'];
+      $this->DB_PASSWORD = $config['DB_PASSWORD'];
+      $this->DB_CHARSET = $config['DB_CHARSET'];
+
       $dsn = "mysql:host={$this->DB_HOST};dbname={$this->DB_NAME};port={$this->DB_PORT};charset={$this->DB_CHARSET}";
       $this->conn = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
       $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     } catch (\Throwable $th) {
-      echo '<br>Ocorreu um erro ao consultar a base de dados.<br>';
-      $logData = array('code' => $th->error_log, 'description' => $th->getMessage());
+      $logData = array('storage' => $this->storage, 'description' => $th->getMessage());
       self::setLog(json_encode($logData), 'error', 'DB');
+
+      if (PHP_SAPI === 'cli') {
+        throw new RuntimeException("Ocorreu um erro ao consultar o storage {$this->storage}.", 0, $th);
+      }
+
+      echo '<br>Ocorreu um erro ao consultar a base de dados.<br>';
       header('location: /unavailable.php');
+      exit();
     }
+  }
+
+  public function getStorage(): string
+  {
+    return $this->storage;
+  }
+
+  public function getDatabaseName(): string
+  {
+    return (string) $this->DB_NAME;
   }
 
   private function setParameters($stmt, $key, $value)
@@ -58,11 +78,12 @@ class Database extends PDO
      * Gerar Log Queries
      */
     if (Config::$MONITORING_QUERY === true) {
-      $logData = array('origin' => $origin, 'query' => $query, 'parameters' => $parameters);
+      $logData = array('storage' => $this->storage, 'origin' => $origin, 'query' => $query, 'parameters' => $parameters);
       self::setLog(json_encode($logData), 'monitoring', 'DB');
     }
 
     $th = null;
+    $stmt = null;
     try {
       $stmt = $this->conn->prepare($query);
       $this->mountQuery($stmt, $parameters);
@@ -71,9 +92,16 @@ class Database extends PDO
       /**
        * Gerar Log Erros
        */
-      if ((int) $stmt->errorCode() > 0) {
-        $logData = array('origin' => $origin, 'code' => $stmt->errorCode(), 'description' => $stmt->errorInfo(), 'throw' => $th->getMessage());
+      if ($stmt !== null && (int) $stmt->errorCode() > 0) {
+        $logData = array('storage' => $this->storage, 'origin' => $origin, 'code' => $stmt->errorCode(), 'description' => $stmt->errorInfo(), 'throw' => $th->getMessage());
         self::setLog(json_encode($logData), 'error', 'DB');
+      } else {
+        $logData = array('storage' => $this->storage, 'origin' => $origin, 'throw' => $th->getMessage());
+        self::setLog(json_encode($logData), 'error', 'DB');
+      }
+
+      if (PHP_SAPI === 'cli') {
+        throw $th;
       }
     }
 

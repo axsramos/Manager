@@ -9,6 +9,8 @@ class SimpleMigrator
 {
     private PDO $pdo;
     private string $database;
+    private string $storage;
+    private string $module = 'CAS';
     private bool $dryRun;
     private array $sqlLog = [];
     private array $metadataClasses = [];
@@ -17,11 +19,8 @@ class SimpleMigrator
     {
         Config::getInstance();
 
-        if (!isset(Config::$DB_STORAGE[$storage])) {
-            throw new RuntimeException("Storage de banco de dados invalido: {$storage}");
-        }
-
-        $config = Config::$DB_STORAGE[$storage];
+        $config = Config::getDbStorage($storage);
+        $this->storage = $storage;
         $this->database = $config['DB_DATABASE'];
         $this->dryRun = $dryRun;
 
@@ -32,9 +31,15 @@ class SimpleMigrator
 
     public function runCasMetadata(bool $force = false): array
     {
-        $this->metadataClasses = $this->discoverMetadataClasses();
+        return $this->runMetadata('CAS', $force);
+    }
+
+    public function runMetadata(string $module = 'CAS', bool $force = false): array
+    {
+        $this->module = $this->normalizeModule($module);
+        $this->metadataClasses = $this->discoverMetadataClasses($this->module);
         $checksum = $this->checksum($this->metadataClasses);
-        $migration = 'cas_metadata_schema';
+        $migration = strtolower($this->module) . '_metadata_schema';
 
         $this->ensureMigrationTable();
 
@@ -43,12 +48,16 @@ class SimpleMigrator
                 'status' => 'skipped',
                 'checksum' => $checksum,
                 'sql' => $this->sqlLog,
-                'message' => 'Nenhuma alteracao nos metadados CAS.',
+                'storage' => $this->storage,
+                'module' => $this->module,
+                'message' => "Nenhuma alteracao nos metadados {$this->module}.",
             ];
         }
 
         $this->applyTables();
-        $this->applyAccountActivationBackfill();
+        if ($this->module === 'CAS') {
+            $this->applyAccountActivationBackfill();
+        }
         $this->applyIndexes();
         $this->applyForeignKeys();
         $this->registerMigration($migration, $checksum);
@@ -57,20 +66,26 @@ class SimpleMigrator
             'status' => $this->dryRun ? 'dry-run' : 'applied',
             'checksum' => $checksum,
             'sql' => $this->sqlLog,
-            'message' => $this->dryRun ? 'SQL gerado sem executar.' : 'Migration CAS aplicada.',
+            'storage' => $this->storage,
+            'module' => $this->module,
+            'message' => $this->dryRun ? 'SQL gerado sem executar.' : "Migration {$this->module} aplicada.",
         ];
     }
 
-    private function discoverMetadataClasses(): array
+    private function discoverMetadataClasses(string $module): array
     {
-        $path = Config::$DIR_BASE . '/App/Metadata/CAS';
+        $path = Config::$DIR_BASE . '/App/Metadata/' . $module;
+        if (!is_dir($path)) {
+            throw new RuntimeException("Diretorio de metadados nao encontrado para o modulo {$module}.");
+        }
+
         $files = glob($path . '/*MD.php') ?: [];
         sort($files);
 
         $classes = [];
         foreach ($files as $file) {
             $classBase = basename($file, '.php');
-            $class = "App\\Metadata\\CAS\\{$classBase}";
+            $class = "App\\Metadata\\{$module}\\{$classBase}";
 
             if (class_exists($class) && defined("{$class}::FIELDS") && defined("{$class}::FIELDS_MD")) {
                 $classes[] = $class;
@@ -80,6 +95,17 @@ class SimpleMigrator
         $this->validateMetadata($classes);
 
         return $classes;
+    }
+
+    private function normalizeModule(string $module): string
+    {
+        $module = strtoupper(trim($module));
+
+        if ($module === '' || !preg_match('/^[A-Z][A-Z0-9_]*$/', $module)) {
+            throw new RuntimeException("Modulo de metadados invalido: {$module}");
+        }
+
+        return $module;
     }
 
     private function validateMetadata(array $classes): void
@@ -95,7 +121,7 @@ class SimpleMigrator
         }
 
         if (!empty($errors)) {
-            throw new RuntimeException("Metadados CAS invalidos:\n- " . implode("\n- ", $errors));
+            throw new RuntimeException("Metadados {$this->module} invalidos:\n- " . implode("\n- ", $errors));
         }
     }
 

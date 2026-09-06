@@ -9,7 +9,7 @@ use App\Core\Config;
 
 trait CrudOperationsTrait
 {
-    // Config::$DB_STORAGE['Default']['DB_DATABASE']
+    // O schema usado em consultas de metadados acompanha o storage da conexão do model.
     /**
      * Nota: Este trait assume que a classe que o usa terá as seguintes propriedades/constantes:
      * - Propriedades: $cnx, $tbl, $att, $selectedFields, $queryOrder.
@@ -625,7 +625,7 @@ trait CrudOperationsTrait
         /**
          * Query parameters
          */
-        $parameters['TABLE_SCHEMA'] = Config::$DB_STORAGE['Default']['DB_DATABASE'];
+        $parameters['TABLE_SCHEMA'] = $this->cnx->getDatabaseName();
         $parameters['TABLE_NAME'] = $tableParent;
 
         /**
@@ -687,7 +687,7 @@ trait CrudOperationsTrait
         /**
          * Query parameters
          */
-        $parameters['TABLE_SCHEMA'] = Config::$DB_STORAGE['Default']['DB_DATABASE'];
+        $parameters['TABLE_SCHEMA'] = $this->cnx->getDatabaseName();
         $parameters['TABLE_NAME'] = $tableParent;
 
         /**
