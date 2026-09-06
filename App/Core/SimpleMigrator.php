@@ -9,11 +9,14 @@ class SimpleMigrator
 {
     private PDO $pdo;
     private string $database;
+    private string $charset;
+    private string $collation;
     private string $storage;
     private string $module = 'CAS';
     private bool $dryRun;
     private array $sqlLog = [];
     private array $metadataClasses = [];
+    private array $createdTables = [];
 
     public function __construct(string $storage = 'Default', bool $dryRun = false)
     {
@@ -22,6 +25,8 @@ class SimpleMigrator
         $config = Config::getDbStorage($storage);
         $this->storage = $storage;
         $this->database = $config['DB_DATABASE'];
+        $this->charset = $config['DB_CHARSET'];
+        $this->collation = $config['DB_COLLATION'];
         $this->dryRun = $dryRun;
 
         $dsn = "mysql:host={$config['DB_HOST']};dbname={$config['DB_DATABASE']};port={$config['DB_PORT']};charset={$config['DB_CHARSET']}";
@@ -60,6 +65,7 @@ class SimpleMigrator
         }
         $this->applyIndexes();
         $this->applyForeignKeys();
+        $this->applyChecks();
         $this->registerMigration($migration, $checksum);
 
         return [
@@ -135,6 +141,7 @@ class SimpleMigrator
                 'fields_pk' => $class::FIELDS_PK,
                 'fields_fk' => $class::FIELDS_FK,
                 'table_idx' => $class::TABLE_IDX,
+                'table_check' => defined("{$class}::TABLE_CHECK") ? $class::TABLE_CHECK : [],
             ];
         }
 
@@ -177,10 +184,15 @@ class SimpleMigrator
 
             if (!$this->tableExists($table)) {
                 $this->execute($this->createTableSql($table, $class));
+                $this->createdTables[] = $table;
                 continue;
             }
 
             foreach ($class::FIELDS as $field) {
+                if (($class::FIELDS_MD[$field]['Generated'] ?? null) !== null) {
+                    continue;
+                }
+
                 if (!$this->columnExists($table, $field)) {
                     $this->execute('ALTER TABLE ' . $this->id($table) . ' ADD COLUMN ' . $this->columnSql($field, $class::FIELDS_MD[$field], in_array($field, $class::FIELDS_PK, true)));
                 }
@@ -204,7 +216,7 @@ class SimpleMigrator
                         continue;
                     }
 
-                    $this->execute('CREATE INDEX ' . $this->id($indexName) . ' ON ' . $this->id($table) . ' (' . $this->fieldList($fields) . ')');
+                    $this->execute('CREATE INDEX ' . $this->id($indexName) . ' ON ' . $this->id($table) . ' (' . $this->indexFieldList($fields) . ')');
                 }
             }
 
@@ -262,8 +274,39 @@ class SimpleMigrator
                         . ' FOREIGN KEY (' . $this->fieldList($fieldsKey) . ')'
                         . ' REFERENCES ' . $this->id($references) . ' (' . $this->fieldList($fields) . ')';
 
+                    if (($definition['OnDelete'] ?? null) !== null) {
+                        $sql .= ' ON DELETE ' . $this->foreignKeyAction((string) $definition['OnDelete']);
+                    }
+
+                    if (($definition['OnUpdate'] ?? null) !== null) {
+                        $sql .= ' ON UPDATE ' . $this->foreignKeyAction((string) $definition['OnUpdate']);
+                    }
+
                     $this->execute($sql);
                 }
+            }
+        }
+    }
+
+    private function applyChecks(): void
+    {
+        foreach ($this->metadataClasses as $class) {
+            $table = $this->tableName($class);
+            $checks = defined("{$class}::TABLE_CHECK") ? $class::TABLE_CHECK : [];
+            if (in_array($table, $this->createdTables, true)) {
+                continue;
+            }
+
+            foreach ($checks as $checkName => $expression) {
+                if ($this->checkExists($table, $checkName)) {
+                    continue;
+                }
+
+                $this->execute(
+                    'ALTER TABLE ' . $this->id($table)
+                    . ' ADD CONSTRAINT ' . $this->id($checkName)
+                    . ' CHECK (' . $this->checkExpression((string) $expression) . ')'
+                );
             }
         }
     }
@@ -287,16 +330,32 @@ class SimpleMigrator
             $columns[] = 'PRIMARY KEY (' . $this->fieldList($class::FIELDS_PK) . ')';
         }
 
-        return 'CREATE TABLE ' . $this->id($table) . " (\n    " . implode(",\n    ", $columns) . "\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+        $checks = defined("{$class}::TABLE_CHECK") ? $class::TABLE_CHECK : [];
+        foreach ($checks as $checkName => $expression) {
+            $columns[] = 'CONSTRAINT ' . $this->id($checkName) . ' CHECK (' . $this->checkExpression((string) $expression) . ')';
+        }
+
+        return 'CREATE TABLE ' . $this->id($table) . " (\n    " . implode(",\n    ", $columns) . "\n) ENGINE=InnoDB DEFAULT CHARSET={$this->charset} COLLATE={$this->collation}";
     }
 
     private function columnSql(string $field, array $metadata, bool $primaryKey = false): string
     {
+        if (($metadata['Generated'] ?? null) !== null) {
+            $stored = (($metadata['Stored'] ?? true) === true) ? ' STORED' : ' VIRTUAL';
+            return $this->id($field) . ' ' . $this->columnType($metadata) . ' GENERATED ALWAYS AS (' . $metadata['Generated'] . ')' . $stored;
+        }
+
         $type = $this->columnType($metadata);
         $required = $primaryKey || ($metadata['Required'] ?? false);
         $sql = $this->id($field) . ' ' . $type . ($required ? ' NOT NULL' : ' NULL');
 
-        if (array_key_exists('Default', $metadata) && $metadata['Default'] !== null && !$this->isTextType($type)) {
+        if (($metadata['AutoIncrement'] ?? false) === true) {
+            $sql .= ' AUTO_INCREMENT';
+        }
+
+        if (array_key_exists('DefaultSql', $metadata) && $metadata['DefaultSql'] !== null && !$this->isTextType($type)) {
+            $sql .= ' DEFAULT ' . (string) $metadata['DefaultSql'];
+        } elseif (array_key_exists('Default', $metadata) && $metadata['Default'] !== null && !$this->isTextType($type)) {
             $sql .= ' DEFAULT ' . $this->quote((string) $metadata['Default']);
         }
 
@@ -310,10 +369,16 @@ class SimpleMigrator
 
         return match ($type) {
             'int', 'integer' => $length > 10 ? 'BIGINT' : 'INT',
+            'bigint' => 'BIGINT',
+            'tinyint' => 'TINYINT(' . ($length > 0 ? $length : 1) . ')',
             'boolean', 'bool' => 'CHAR(1)',
+            'char' => 'CHAR(' . ($length > 0 ? $length : 1) . ')',
+            'varchar' => 'VARCHAR(' . ($length > 0 ? $length : 255) . ')',
             'datetime' => 'DATETIME',
             'date' => 'DATE',
             'text' => 'TEXT',
+            'longtext' => 'LONGTEXT',
+            'json' => 'JSON',
             default => $length > 0 && $length <= 255 ? "VARCHAR({$length})" : 'TEXT',
         };
     }
@@ -378,6 +443,18 @@ class SimpleMigrator
         return (bool) $stmt->fetchColumn();
     }
 
+    private function checkExists(string $table, string $constraint): bool
+    {
+        if ($this->dryRun) {
+            return false;
+        }
+
+        $stmt = $this->pdo->prepare("SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = :schema AND TABLE_NAME = :table AND CONSTRAINT_NAME = :constraint AND CONSTRAINT_TYPE = 'CHECK' LIMIT 1");
+        $stmt->execute([':schema' => $this->database, ':table' => $table, ':constraint' => $constraint]);
+
+        return (bool) $stmt->fetchColumn();
+    }
+
     private function execute(string $sql): void
     {
         $this->sqlLog[] = $sql;
@@ -406,6 +483,27 @@ class SimpleMigrator
         return implode(', ', array_map(fn ($field) => $this->id($field), $fields));
     }
 
+    private function indexFieldList(array $fields): string
+    {
+        $parts = [];
+
+        foreach ($fields as $key => $value) {
+            if (is_int($key)) {
+                $parts[] = $this->id((string) $value);
+                continue;
+            }
+
+            $direction = strtoupper((string) $value);
+            if (!in_array($direction, ['ASC', 'DESC'], true)) {
+                throw new RuntimeException("Direcao de indice invalida: {$direction}");
+            }
+
+            $parts[] = $this->id((string) $key) . ' ' . $direction;
+        }
+
+        return implode(', ', $parts);
+    }
+
     private function id(string $identifier): string
     {
         if (!preg_match('/^[A-Za-z0-9_]+$/', $identifier)) {
@@ -422,6 +520,25 @@ class SimpleMigrator
 
     private function isTextType(string $type): bool
     {
-        return in_array(strtoupper($type), ['TEXT', 'MEDIUMTEXT', 'LONGTEXT'], true);
+        return in_array(strtoupper($type), ['TEXT', 'MEDIUMTEXT', 'LONGTEXT', 'JSON'], true);
+    }
+
+    private function foreignKeyAction(string $action): string
+    {
+        $action = strtoupper(trim($action));
+        if (!in_array($action, ['CASCADE', 'RESTRICT', 'SET NULL', 'NO ACTION'], true)) {
+            throw new RuntimeException("Acao de foreign key invalida: {$action}");
+        }
+
+        return $action;
+    }
+
+    private function checkExpression(string $expression): string
+    {
+        if (!preg_match('/^[A-Za-z0-9_`()\\s<>=!+\\-*\\/.,]+$/', $expression)) {
+            throw new RuntimeException("Expressao de CHECK invalida: {$expression}");
+        }
+
+        return $expression;
     }
 }

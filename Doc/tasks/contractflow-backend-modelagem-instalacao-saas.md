@@ -1,4 +1,4 @@
-> **Status: PLANEJADO**
+> **Status: IMPLEMENTADO**
 
 # Plano - backend do ContractFlow com modelagem e instalação SaaS
 
@@ -18,6 +18,7 @@ O trabalho deve entregar a base técnica do módulo de contratos sem interface v
 - Criar migrations para a base `SAAS`, não para `Default`.
 - Criar a réplica reduzida de `CasRps` na base `SAAS`, contendo somente `CasRpsCod` e `CasRpsDsc`.
 - Criar as tabelas `CTRConcurrencyGroup`, `CTRContract`, `CTRContractDetail`, `CTRContractItem`, `CTRContractItemDetail`, `CTRContractItemConsumption` e `CTRContractSignatory`.
+- Criar a tabela técnica `CTRPackageCheckpoint` para controle idempotente de instalação por tenant, produto, versão e task.
 - Adicionar `RepositoryId` nas tabelas operacionais do módulo, relacionado a `CasRps.CasRpsCod` da base `SAAS`.
 - Garantir que todas as novas tabelas físicas do módulo ContractFlow usem o prefixo `CTR`, exceto a réplica reduzida `CasRps` na conexão `SAAS`.
 - Implementar models e metadata em `App\Models\CTR` e `App\Metadata\CTR`.
@@ -96,7 +97,7 @@ Criar em `SAAS`:
 
 ```sql
 CREATE TABLE CasRps (
-    CasRpsCod INT NOT NULL PRIMARY KEY,
+    CasRpsCod VARCHAR(65) NOT NULL PRIMARY KEY,
     CasRpsDsc VARCHAR(255) NOT NULL
 );
 ```
@@ -104,6 +105,7 @@ CREATE TABLE CasRps (
 Regras:
 
 - A tabela é uma referência mínima de repositório/tenant.
+- `CasRpsCod` deve usar o mesmo tipo lógico adotado pelo Manager para permitir sincronização direta da chave.
 - A origem autorizada continua sendo a estrutura administrativa do Manager.
 - A sincronização deve inserir ou atualizar somente `CasRpsCod` e `CasRpsDsc`.
 - A instalação do ContractFlow deve validar a existência do `CasRpsCod` correspondente antes de aplicar dados do módulo.
@@ -120,13 +122,18 @@ Criar metadata e model para:
 - `CTRContractItemConsumption`;
 - `CTRContractSignatory`.
 
+Criar também metadata e model técnico para:
+
+- `CTRPackageCheckpoint`.
+
 As tabelas operacionais com dados próprios do módulo devem possuir `RepositoryId`:
 
 - `CTRConcurrencyGroup.RepositoryId`;
 - `CTRContract.RepositoryId`;
 - `CTRContractItem.RepositoryId`;
 - `CTRContractItemConsumption.RepositoryId`;
-- `CTRContractSignatory.RepositoryId`.
+- `CTRContractSignatory.RepositoryId`;
+- `CTRPackageCheckpoint.RepositoryId`.
 
 As tabelas de detalhe 1:1 não precisam repetir `RepositoryId`:
 
@@ -330,6 +337,7 @@ Se o projeto optar por outro nome de argumento, documentar a decisão na própri
 - Migrations do módulo podem ser executadas contra `SAAS`.
 - A réplica reduzida de `CasRps` existe em `SAAS`.
 - As tabelas do ADR 003 são criadas com prefixo `CTR`, `RepositoryId`, constraints e índices definidos.
+- A tabela técnica `CTRPackageCheckpoint` registra checkpoints de instalação sem depender de controller visual.
 - Models e metadata `CTR` estão disponíveis para todas as tabelas do módulo.
 - Classes de domínio em `App\Class\Contract` expõem funções reutilizáveis por frontend e APIs futuras.
 - O fluxo de instalação por tenant recebe `RepositoryId` e hash, localiza o pacote estático e aplica dados predefinidos de forma idempotente.
@@ -349,6 +357,7 @@ Se o projeto optar por outro nome de argumento, documentar a decisão na própri
 - `App\Metadata\CTR\CTRContractItemDetailMD.php`.
 - `App\Metadata\CTR\CTRContractItemConsumptionMD.php`.
 - `App\Metadata\CTR\CTRContractSignatoryMD.php`.
+- `App\Metadata\CTR\CTRPackageCheckpointMD.php`.
 - `App\Models\CTR\CasRpsModel.php` ou model equivalente para réplica reduzida.
 - `App\Models\CTR\CTRConcurrencyGroupModel.php`.
 - `App\Models\CTR\CTRContractModel.php`.
@@ -357,6 +366,7 @@ Se o projeto optar por outro nome de argumento, documentar a decisão na própri
 - `App\Models\CTR\CTRContractItemDetailModel.php`.
 - `App\Models\CTR\CTRContractItemConsumptionModel.php`.
 - `App\Models\CTR\CTRContractSignatoryModel.php`.
+- `App\Models\CTR\CTRPackageCheckpointModel.php`.
 - `App\Class\Contract\TenantRepositorySync.php` ou nome equivalente.
 - `App\Class\Contract\ContractService.php` ou nome equivalente.
 - `App\Class\Contract\ContractItemService.php` ou nome equivalente.

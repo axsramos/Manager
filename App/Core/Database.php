@@ -60,6 +60,11 @@ class Database extends PDO
     return (string) $this->DB_NAME;
   }
 
+  public function getPdo(): PDO
+  {
+    return $this->conn;
+  }
+
   private function setParameters($stmt, $key, $value)
   {
     $stmt->bindParam($key, $value);

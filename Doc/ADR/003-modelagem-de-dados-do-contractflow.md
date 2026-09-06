@@ -27,7 +27,7 @@ Criar na base `SAAS` uma réplica reduzida da tabela `CasRps`, contendo somente 
 
 ```sql
 CREATE TABLE CasRps (
-    CasRpsCod INT NOT NULL PRIMARY KEY,
+    CasRpsCod VARCHAR(65) NOT NULL PRIMARY KEY,
     CasRpsDsc VARCHAR(255) NOT NULL
 );
 ```
@@ -41,7 +41,7 @@ Essa tabela deve ser mantida como referência mínima do repositório. Ela não 
 ```sql
 CREATE TABLE CTRConcurrencyGroup (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    RepositoryId INT NOT NULL,
+    RepositoryId VARCHAR(65) NOT NULL,
     Name VARCHAR(100) NOT NULL,
     AllowMultipleActive TINYINT(1) NOT NULL DEFAULT 0,
 
@@ -55,7 +55,7 @@ CREATE TABLE CTRConcurrencyGroup (
 ```sql
 CREATE TABLE CTRContract (
     Id CHAR(36) PRIMARY KEY,
-    RepositoryId INT NOT NULL,
+    RepositoryId VARCHAR(65) NOT NULL,
     UserId INT NOT NULL,
     ParentContractId CHAR(36) NULL,
     ConcurrencyGroupId INT NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE CTRContractDetail (
 ```sql
 CREATE TABLE CTRContractItem (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    RepositoryId INT NOT NULL,
+    RepositoryId VARCHAR(65) NOT NULL,
     ContractId CHAR(36) NOT NULL,
     ServiceCode VARCHAR(50) NULL,
     Description VARCHAR(255) NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE CTRContractItemDetail (
 ```sql
 CREATE TABLE CTRContractItemConsumption (
     Id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    RepositoryId INT NOT NULL,
+    RepositoryId VARCHAR(65) NOT NULL,
     ContractItemId INT NOT NULL,
     PreviousBalance INT NOT NULL,
     ConsumedQuantity INT NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE CTRContractItemConsumption (
 ```sql
 CREATE TABLE CTRContractSignatory (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    RepositoryId INT NOT NULL,
+    RepositoryId VARCHAR(65) NOT NULL,
     ContractId CHAR(36) NOT NULL,
     UserId INT NOT NULL,
     Role VARCHAR(50) NOT NULL,
@@ -209,7 +209,7 @@ ON CTRContractItemConsumption (ContractItemId, ConsumedAt DESC);
 - Todas as novas tabelas do módulo ContractFlow devem usar prefixo `CTR`, exceto a réplica `CasRps` em `SAAS`.
 - `CTRContract.Id` deve usar UUID v4 em `CHAR(36)`, permitindo geração descentralizada pela aplicação.
 - Chaves de tabelas de alto volume devem usar `INT` ou `BIGINT` sequenciais.
-- `RepositoryId` deve existir nas tabelas operacionais com dados próprios do módulo.
+- `RepositoryId` deve existir nas tabelas operacionais com dados próprios do módulo e usar o mesmo tipo lógico de `CasRps.CasRpsCod` do Manager.
 - Tabelas de detalhe 1:1 não precisam repetir `RepositoryId`, pois herdam o escopo pelo relacionamento com a tabela principal.
 - Valores monetários devem ser persistidos em centavos usando `BIGINT`.
 - `CTRContractItem.LineTotal` deve ser calculado pelo banco e armazenado fisicamente.
