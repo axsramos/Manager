@@ -46,6 +46,14 @@ abstract class AbstractContractService
         return $row === false ? null : $row;
     }
 
+    protected function fetchAll(string $sql, array $parameters = []): array
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($parameters);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     protected function execute(string $sql, array $parameters = []): int
     {
         $stmt = $this->pdo->prepare($sql);

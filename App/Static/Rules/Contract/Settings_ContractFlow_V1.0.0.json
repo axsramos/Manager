@@ -4,6 +4,10 @@
     "Version": "1.0.0",
     "Description": "Pacote inicial do ContractFlow para configuração técnica de contratos, franquias e ledger.",
     "RunScript": "ApplyContractSettings",
+    "RunScripts": [
+        "ApplyApplicationSettings",
+        "ApplyContractSettings"
+    ],
     "Packages": [
         {
             "Task": 1,
@@ -12,6 +16,275 @@
         }
     ],
     "BaseTableData": [
+        {
+            "CasApp": [
+                {
+                    "CasAppCod": "CONTRACTFLOW",
+                    "CasAppDsc": "Contract Flow",
+                    "CasAppBlq": "N",
+                    "CasAppTst": "N",
+                    "CasAppVer": "1.0.0",
+                    "CasAppKey": "CONTRACTFLOW",
+                    "CasAppGrp": "CONTRACTFLOW"
+                }
+            ]
+        },
+        {
+            "CasFun": [
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasFunDsc": "Autorizado",
+                    "CasFunBlq": "N"
+                }
+            ]
+        },
+        {
+            "CasMdl": [
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasMdlDsc": "Contract Flow",
+                    "CasMdlBlq": "N"
+                }
+            ]
+        },
+        {
+            "CasPrg": [
+                {
+                    "CasPrgCod": "ContractDashboard",
+                    "CasPrgDsc": "Dashboard ContractFlow",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "ContractInstall",
+                    "CasPrgDsc": "Instalação ContractFlow",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "Contract",
+                    "CasPrgDsc": "Contratos",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "ContractItem",
+                    "CasPrgDsc": "Itens de Contrato",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "ContractLedger",
+                    "CasPrgDsc": "Ledger de Contratos",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "ContractSignatory",
+                    "CasPrgDsc": "Signatários",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                },
+                {
+                    "CasPrgCod": "ContractConcurrencyGroup",
+                    "CasPrgDsc": "Grupos de Concorrência",
+                    "CasPrgBlq": "N",
+                    "CasPrgTst": "N"
+                }
+            ]
+        },
+        {
+            "CasFpr": [
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractDashboard"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractInstall"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "Contract"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractItem"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractLedger"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractSignatory"
+                },
+                {
+                    "CasFunCod": "AUTHORIZED",
+                    "CasPrgCod": "ContractConcurrencyGroup"
+                }
+            ]
+        },
+        {
+            "CasMpr": [
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractDashboard"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractInstall"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "Contract"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractItem"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractLedger"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractSignatory"
+                },
+                {
+                    "CasMdlCod": "CONTRACTFLOW",
+                    "CasPrgCod": "ContractConcurrencyGroup"
+                }
+            ]
+        },
+        {
+            "CasMnu": [
+                {
+                    "CasMnuCod": "CONTRACTFLOW",
+                    "CasMnuDsc": "CONTRACT FLOW",
+                    "CasMnuBlq": "N",
+                    "CasMnuGrp": "CONTRACTFLOW"
+                }
+            ]
+        },
+        {
+            "CasMna": [
+                {
+                    "CasMnuCod": "CONTRACTFLOW",
+                    "CasMnaCod": "CONTRACTFLOW_DASHBOARD",
+                    "CasPrgCod": "ContractDashboard",
+                    "CasMnaDsc": "Dashboard",
+                    "CasMnaBlq": "N",
+                    "CasMnaLnk": "/Contract/Dashboard",
+                    "CasMnaIco": "fas fa-file-contract",
+                    "CasMnaGrp": "CONTRACTFLOW"
+                }
+            ]
+        },
+        {
+            "CasPfi": [
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasPfiDsc": "Contract Flow",
+                    "CasPfiBlq": "N"
+                }
+            ]
+        },
+        {
+            "CasPfu": [
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": ""
+                }
+            ]
+        },
+        {
+            "CasApf": [
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractDashboard"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractInstall"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Contract"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractItem"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractLedger"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractSignatory"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractConcurrencyGroup"
+                }
+            ]
+        },
+        {
+            "CasAfu": [
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractDashboard",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractInstall",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "Contract",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractItem",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractLedger",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractSignatory",
+                    "CasFunCod": "AUTHORIZED"
+                },
+                {
+                    "CasPfiCod": "CONTRACTFLOW",
+                    "CasUsrCod": "",
+                    "CasPrgCod": "ContractConcurrencyGroup",
+                    "CasFunCod": "AUTHORIZED"
+                }
+            ]
+        }
+    ],
+    "OperationalTableData": [
         {
             "CTRConcurrencyGroup": [
                 {

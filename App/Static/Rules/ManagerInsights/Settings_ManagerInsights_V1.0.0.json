@@ -1,0 +1,15 @@
+{
+    "ProductKey": "MANAGER_INSIGHTS",
+    "ProductName": "Manager Insights",
+    "Version": "1.0.0",
+    "Description": "Pacote inicial do Manager Insights para ativação gratuita pela loja de aplicativos.",
+    "RunScript": "ApplyApplicationSettings",
+    "Packages": [
+        {
+            "Task": 1,
+            "Date": "2026-09-07",
+            "Description": "Registro do aplicativo gratuito no repositório."
+        }
+    ],
+    "BaseTableData": []
+}

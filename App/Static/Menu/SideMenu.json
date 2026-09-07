@@ -33,6 +33,12 @@
                             "SubItems": []
                         },
                         {
+                            "Description": "Loja de Aplicativos",
+                            "Icon": "fas fa-store",
+                            "Link": "/Manager/AppStore",
+                            "SubItems": []
+                        },
+                        {
                             "Description": "Repositório",
                             "Icon": "fas fa-box-open",
                             "Link": "/Manager/Repositorio",

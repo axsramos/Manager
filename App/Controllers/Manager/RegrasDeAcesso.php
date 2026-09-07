@@ -298,33 +298,32 @@ class RegrasDeAcesso extends Controller
         $this->view('jsonView', $data);
     }
 
-    public function setDataRegrasDeAcessoModal()
+    public function setDataRegrasDeAcessoModal(string $rps_id, string $pfi_id, string $prg_id)
     {
         /**
          * Get Parameters
          */
-        $parms = explode('/', $_SERVER['REQUEST_URI']);
-        $idx = (count($parms));
+        $parms = [
+            'CasRpsCod' => $rps_id,
+            'CasPfiCod' => $pfi_id,
+            'CasPrgCod' => $prg_id,
+        ];
 
-        if ($idx < 3) {
+        if (empty($rps_id) || empty($pfi_id) || empty($prg_id)) {
             http_response_code(400);
             $msg = $this->message->getMessage(400);
             $msg['Description'] .= '. Os parâmetros são inválidos. (Repositório, Perfil e Programa) são obrigatórios.';
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         }
-        
-        $prg_id = $parms[$idx-1];
-        $pfi_id = $parms[$idx-2];
-        $rps_id = $parms[$idx-3];
 
         $currentMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
         if ($currentMethod != 'POST') {
             http_response_code(405);
             $msg = $this->message->getMessage(405);
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         }
@@ -333,7 +332,7 @@ class RegrasDeAcesso extends Controller
          * Get Data Content 
          */
         $data = json_decode(file_get_contents('php://input'));
-        $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'data' => $data)), 'monitoring', 'Authorization');
+        $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'data' => $data)), 'monitoring', 'Authorization');
 
         /**
          * Check Data Content 
@@ -343,7 +342,7 @@ class RegrasDeAcesso extends Controller
             http_response_code(400);
             $msg = $this->message->getMessage(400);
             $msg['Description'] .= '. (AuthorizedProgram) é um campo obrigatório.';
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         } else {
@@ -353,7 +352,7 @@ class RegrasDeAcesso extends Controller
                     http_response_code(400);
                     $msg = $this->message->getMessage(400);
                     $msg['Description'] .= '. O valor informado não é aceito. Considere utilizar: (NEGADO | AUTORIZADO).';
-                    $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+                    $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
                     $this->view('jsonView', $msg);
                     return;
                 }
@@ -368,7 +367,7 @@ class RegrasDeAcesso extends Controller
             http_response_code(400);
             $msg = $this->message->getMessage(400);
             $msg['Description'] .= '. (Repositório) não existe.';
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         }
@@ -382,7 +381,7 @@ class RegrasDeAcesso extends Controller
             http_response_code(400);
             $msg = $this->message->getMessage(400);
             $msg['Description'] .= '. (Perfil) não existe.';
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         }
@@ -396,7 +395,7 @@ class RegrasDeAcesso extends Controller
             http_response_code(400);
             $msg = $this->message->getMessage(400);
             $msg['Description'] .= '. (Programa) não existe.';
-            $this->setLog(json_encode(array('parms' => $parms, 'idx' => $idx, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
+            $this->setLog(json_encode(array('parms' => $parms, 'method' => $currentMethod, 'message' => $msg)), 'error', 'Authorization');
             $this->view('jsonView', $msg);
             return;
         }
@@ -431,7 +430,6 @@ class RegrasDeAcesso extends Controller
             $obCasApfModel->CasUsrCod = '';
             $obCasApfModel->CasPrgCod = $prg_id;
             $obCasApfModel->insertAllUserAuthorized();
-            
             foreach ($data->Functionalities as $key => $value) {
                 $obCasAfuModel = new CasAfuModel();
                 $obCasAfuModel->setSelectedFields(['CasRpsCod', 'CasPfiCod', 'CasUsrCod', 'CasPrgCod', 'CasFunCod']);

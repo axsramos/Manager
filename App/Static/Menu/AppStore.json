@@ -1,0 +1,79 @@
+{
+    "version": "1.0.0",
+    "items": [
+        {
+            "app_id": "CONTRACTFLOW",
+            "product_key": "CONTRACTFLOW",
+            "slug": "contractflow",
+            "title": "ContractFlow",
+            "summary": "Gestão dinâmica de contratos, franquias e consumo.",
+            "description": "Controle contratos, itens, saldos e consumo por repositório com rastreabilidade operacional.",
+            "tag": "Pago",
+            "badge": "Novo",
+            "category": "Contratos",
+            "price": "Sob consulta",
+            "term": "Mensal",
+            "order": 10,
+            "status": "published",
+            "theme": "SBAdmin",
+            "cover_image": "/SBAdmin/images/products/contractflow/cover.jpg",
+            "icon": "fas fa-file-contract",
+            "assets_path": "/SBAdmin/images/products/contractflow/",
+            "details_view": "App/Views/SBAdmin/AppStore/Products/ContractFlowSection.php",
+            "activation_mode": "token",
+            "requires_token": true,
+            "package_directory": "Contract",
+            "package_name": "Settings_ContractFlow_V1.0.0.json",
+            "package_version": "1.0.0",
+            "run_script": "ApplyContractSettings",
+            "run_scripts": [
+                "ApplyApplicationSettings",
+                "ApplyContractSettings"
+            ],
+            "success_url": "/Contract/Dashboard",
+            "launch_url": "/Contract/Dashboard",
+            "learn_more_url": "/Manager/AppStore/Product/contractflow",
+            "features": [
+                "Contratos por repositório",
+                "Controle de franquias",
+                "Ledger de consumo"
+            ],
+            "audience": "Equipes operacionais e financeiras"
+        },
+        {
+            "app_id": "MANAGER_INSIGHTS",
+            "product_key": "MANAGER_INSIGHTS",
+            "slug": "manager-insights",
+            "title": "Manager Insights",
+            "summary": "Indicadores simples para acompanhar uso e configuração do portal.",
+            "description": "Visualize sinais operacionais do ambiente, pendências de configuração e atalhos administrativos.",
+            "tag": "Gratuito",
+            "badge": "Incluso",
+            "category": "Gestão",
+            "price": "R$ 0,00",
+            "term": "Gratuito",
+            "order": 20,
+            "status": "published",
+            "theme": "SBAdmin",
+            "cover_image": "/SBAdmin/images/products/manager-insights/cover.jpg",
+            "icon": "fas fa-chart-line",
+            "assets_path": "/SBAdmin/images/products/manager-insights/",
+            "details_view": "App/Views/SBAdmin/AppStore/Products/DefaultProductSection.php",
+            "activation_mode": "free",
+            "requires_token": false,
+            "package_directory": "ManagerInsights",
+            "package_name": "Settings_ManagerInsights_V1.0.0.json",
+            "package_version": "1.0.0",
+            "run_script": "ApplyApplicationSettings",
+            "success_url": "/Manager/Dashboard",
+            "launch_url": "/Manager/Dashboard",
+            "learn_more_url": "/Manager/AppStore/Product/manager-insights",
+            "features": [
+                "Resumo administrativo",
+                "Atalhos de configuração",
+                "Visão inicial gratuita"
+            ],
+            "audience": "Administradores do portal"
+        }
+    ]
+}

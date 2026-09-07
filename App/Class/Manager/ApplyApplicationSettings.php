@@ -43,6 +43,8 @@ class ApplyApplicationSettings
             ];
         }
 
+        return $this->runWithPackage($rps_id, $app_id, $data);
+
         $baseTableData = array();
 
         if (! is_null($data)) {
@@ -66,6 +68,9 @@ class ApplyApplicationSettings
             foreach ($baseTableData as $dataTable) {
                 foreach ($dataTable as $table => $value) {
                     switch ($table) {
+                        case 'CasApp':
+                            $this->processCasApp($rps_id, $app_id, $value);
+                            break;
                         case 'CasFun':
                             $this->processCasFun($rps_id, $app_id, $value);
                             break;
@@ -116,6 +121,120 @@ class ApplyApplicationSettings
             'status' => 'applied',
             'message' => 'Configurações do aplicativo aplicadas.',
         ];
+    }
+
+    public function runWithPackage(string $rps_id, string $app_id, array $data): array
+    {
+        $baseTableData = $data['BaseTableData'] ?? [];
+
+        $obCasRpsModel = new CasRpsModel();
+        $obCasRpsModel->CasRpsCod = $rps_id;
+        $obCasRpsModel->setSelectedFields(['CasRpsCod']);
+        if (! $obCasRpsModel->readRegister()) {
+            return [
+                'status' => 'warning',
+                'message' => 'RepositÃ³rio invÃ¡lido para aplicaÃ§Ã£o das configuraÃ§Ãµes.',
+            ];
+        }
+
+        foreach ($baseTableData as $dataTable) {
+            foreach ($dataTable as $table => $value) {
+                switch ($table) {
+                    case 'CasApp':
+                        $this->processCasApp($rps_id, $app_id, $value);
+                        break;
+                    case 'CasFun':
+                        $this->processCasFun($rps_id, $app_id, $value);
+                        break;
+                    case 'CasMdl':
+                        $this->processCasMdl($rps_id, $app_id, $value);
+                        break;
+                    case 'CasPrg':
+                        $this->processCasPrg($rps_id, $app_id, $value);
+                        break;
+                    case 'CasPar':
+                        $this->processCasPar($rps_id, $app_id, $value);
+                        break;
+                    case 'CasFpr':
+                        $this->processCasFpr($rps_id, $app_id, $value);
+                        break;
+                    case 'CasMpr':
+                        $this->processCasMpr($rps_id, $app_id, $value);
+                        break;
+                    case 'CasMnu':
+                        $this->processCasMnu($rps_id, $app_id, $value);
+                        break;
+                    case 'CasMna':
+                        $this->processCasMna($rps_id, $app_id, $value);
+                        break;
+                    case 'CasPfi':
+                        $this->processCasPfi($rps_id, $app_id, $value);
+                        break;
+                    case 'CasPfu':
+                        $this->processCasPfu($rps_id, $app_id, $value);
+                        break;
+                    case 'CasApf':
+                        $this->processCasApf($rps_id, $app_id, $value);
+                        break;
+                    case 'CasAfu':
+                        $this->processCasAfu($rps_id, $app_id, $value);
+                        break;
+                    case 'CasWks':
+                        $this->processCasWks($rps_id, $app_id, $value);
+                        break;
+                }
+            }
+        }
+
+        $this->updateStatusProgress($rps_id, $app_id, 'UPDATED');
+
+        return [
+            'status' => 'applied',
+            'message' => 'ConfiguraÃ§Ãµes do aplicativo aplicadas.',
+        ];
+    }
+
+    private function processCasApp(string $rps_id, string $app_id, array $data): void
+    {
+        $inserted = 0;
+        $erros = 0;
+
+        foreach ($data as $value) {
+            $isValid = true;
+
+            if (!isset($value['CasAppCod']) || trim((string) $value['CasAppCod']) === '') {
+                $isValid = false;
+            }
+
+            foreach (CasAppModel::FIELDS_REQUIRED as $fieldRequired) {
+                if (in_array($fieldRequired, ['CasAppBlq', 'CasAppTst'])) {
+                    continue; // not required, will apply default value //
+                }
+                if (!isset($value[$fieldRequired])) {
+                    $isValid = false;
+                    break;
+                }
+            }
+
+            if ($isValid) {
+                $obCasAppModel = new CasAppModel();
+                foreach (CasAppModel::FIELDS as $field) {
+                    if (isset($value[$field])) {
+                        $obCasAppModel->$field = $value[$field];
+                    }
+                }
+                if (! $obCasAppModel->readRegister()) {
+                    $result = $obCasAppModel->createRegister();
+                    if ($result) {
+                        $inserted ++;
+                    } else {
+                        $erros ++;
+                    }
+                }
+            }
+        }
+
+        $this->updateStatusProgress($rps_id, $app_id, 'TASK-0000', array('Inserted' => $inserted, 'Table' => 'CasApp', 'Errors' => $erros));
     }
 
     private function processCasFun(string $rps_id, string $app_id, array $data): void

@@ -12,9 +12,9 @@ class ApplyContractSettings extends AbstractContractService
 
         $applied = [];
         $warnings = [];
-        $baseTableData = $package['BaseTableData'] ?? [];
+        $tableData = $package['OperationalTableData'] ?? $package['BaseTableData'] ?? [];
         $tasks = $package['Packages'] ?? [['Task' => 1, 'Description' => 'Configurações iniciais']];
-        $contentHash = hash('sha256', json_encode($baseTableData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        $contentHash = hash('sha256', json_encode($tableData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
         $this->pdo->beginTransaction();
         try {
@@ -29,7 +29,7 @@ class ApplyContractSettings extends AbstractContractService
                     throw new RuntimeException("Checkpoint divergente para a task {$taskId} do ContractFlow.");
                 }
 
-                $tableResult = $this->applyBaseTableData($repositoryId, $baseTableData);
+                $tableResult = $this->applyOperationalTableData($repositoryId, $tableData);
                 $this->saveCheckpoint($repositoryId, $package, $taskId, $contentHash, 'Pacote aplicado. Hash: ' . $packageHash);
                 $applied[] = ['task' => $taskId, 'status' => 'applied', 'tables' => $tableResult];
             }
@@ -66,11 +66,11 @@ class ApplyContractSettings extends AbstractContractService
         }
     }
 
-    private function applyBaseTableData(string $repositoryId, array $baseTableData): array
+    private function applyOperationalTableData(string $repositoryId, array $tableData): array
     {
         $result = [];
 
-        foreach ($baseTableData as $dataTable) {
+        foreach ($tableData as $dataTable) {
             foreach ($dataTable as $table => $records) {
                 $result[$table] = match ($table) {
                     'CTRConcurrencyGroup' => $this->applyConcurrencyGroups($repositoryId, $records),

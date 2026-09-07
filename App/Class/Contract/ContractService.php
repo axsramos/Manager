@@ -119,6 +119,28 @@ class ContractService extends AbstractContractService
         return $this->result($rows > 0 ? 'updated' : 'skipped', 'Status do contrato processado.', ['contract_id' => $contractId]);
     }
 
+    public function updateDraft(string $repositoryId, string $contractId, array $data): array
+    {
+        $this->pdo->beginTransaction();
+        try {
+            $contract = $this->fetchOne('SELECT Status FROM CTRContract WHERE Id = :id AND RepositoryId = :repository_id FOR UPDATE', [':id' => $contractId, ':repository_id' => $repositoryId]);
+            if ($contract === null) { throw new RuntimeException('Contrato não localizado.'); }
+            if ($contract['Status'] !== self::STATUS_DRAFT) { throw new RuntimeException('Somente contratos em rascunho podem ser alterados.'); }
+
+            $this->execute('UPDATE CTRContract SET UserId = :user_id, ParentContractId = :parent_id, ConcurrencyGroupId = :group_id, BillingCycle = :billing_cycle, StartDate = :start_date, EndDate = :end_date, ContractHash = :contract_hash WHERE Id = :id AND RepositoryId = :repository_id', [
+                ':user_id' => $data['UserId'], ':parent_id' => $data['ParentContractId'] ?? null, ':group_id' => $data['ConcurrencyGroupId'],
+                ':billing_cycle' => $data['BillingCycle'] ?? null, ':start_date' => $data['StartDate'] ?? null, ':end_date' => $data['EndDate'] ?? null,
+                ':contract_hash' => $data['ContractHash'] ?? null, ':id' => $contractId, ':repository_id' => $repositoryId,
+            ]);
+            if (isset($data['Detail']) && is_array($data['Detail'])) { $this->upsertDetail($contractId, $data['Detail']); }
+            $this->pdo->commit();
+        } catch (\Throwable $exception) {
+            $this->pdo->rollBack();
+            throw $exception;
+        }
+        return $this->result('updated', 'Contrato em rascunho atualizado.', ['contract_id' => $contractId]);
+    }
+
     private function upsertDetail(string $contractId, array $detail): void
     {
         $this->execute(

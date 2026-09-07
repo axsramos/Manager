@@ -154,7 +154,8 @@ class Config
             'auth',
             'api',
             'manager',
-            'support'
+            'support',
+            'contract'
         );
     }
 
