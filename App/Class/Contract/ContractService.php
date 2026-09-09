@@ -12,7 +12,7 @@ class ContractService extends AbstractContractService
     public const STATUS_EXPIRED = 'Expired';
     public const STATUS_CANCELED = 'Canceled';
 
-    public function createDraft(string $repositoryId, int $userId, int $concurrencyGroupId, array $data = []): array
+    public function createDraft(string $repositoryId, string $userId, int $concurrencyGroupId, array $data = []): array
     {
         $contractId = $data['Id'] ?? $this->uuidV4();
 
@@ -20,12 +20,14 @@ class ContractService extends AbstractContractService
         try {
             $this->execute(
                 'INSERT INTO CTRContract
-                (Id, RepositoryId, UserId, ParentContractId, ConcurrencyGroupId, Status, BillingCycle, StartDate, EndDate, ContractHash)
-                VALUES (:id, :repository_id, :user_id, :parent_id, :group_id, :status, :billing_cycle, :start_date, :end_date, :contract_hash)',
+                (Id, RepositoryId, UserId, Description, Client, ParentContractId, ConcurrencyGroupId, Status, BillingCycle, StartDate, EndDate, ContractHash)
+                VALUES (:id, :repository_id, :user_id, :description, :client, :parent_id, :group_id, :status, :billing_cycle, :start_date, :end_date, :contract_hash)',
                 [
                     ':id' => $contractId,
                     ':repository_id' => $repositoryId,
                     ':user_id' => $userId,
+                    ':description' => $data['Description'] ?? null,
+                    ':client' => $data['Client'] ?? null,
                     ':parent_id' => $data['ParentContractId'] ?? null,
                     ':group_id' => $concurrencyGroupId,
                     ':status' => self::STATUS_DRAFT,
@@ -127,8 +129,8 @@ class ContractService extends AbstractContractService
             if ($contract === null) { throw new RuntimeException('Contrato não localizado.'); }
             if ($contract['Status'] !== self::STATUS_DRAFT) { throw new RuntimeException('Somente contratos em rascunho podem ser alterados.'); }
 
-            $this->execute('UPDATE CTRContract SET UserId = :user_id, ParentContractId = :parent_id, ConcurrencyGroupId = :group_id, BillingCycle = :billing_cycle, StartDate = :start_date, EndDate = :end_date, ContractHash = :contract_hash WHERE Id = :id AND RepositoryId = :repository_id', [
-                ':user_id' => $data['UserId'], ':parent_id' => $data['ParentContractId'] ?? null, ':group_id' => $data['ConcurrencyGroupId'],
+            $this->execute('UPDATE CTRContract SET UserId = :user_id, Description = :description, Client = :client, ParentContractId = :parent_id, ConcurrencyGroupId = :group_id, BillingCycle = :billing_cycle, StartDate = :start_date, EndDate = :end_date, ContractHash = :contract_hash WHERE Id = :id AND RepositoryId = :repository_id', [
+                ':user_id' => $data['UserId'], ':description' => $data['Description'] ?? null, ':client' => $data['Client'] ?? null, ':parent_id' => $data['ParentContractId'] ?? null, ':group_id' => $data['ConcurrencyGroupId'],
                 ':billing_cycle' => $data['BillingCycle'] ?? null, ':start_date' => $data['StartDate'] ?? null, ':end_date' => $data['EndDate'] ?? null,
                 ':contract_hash' => $data['ContractHash'] ?? null, ':id' => $contractId, ':repository_id' => $repositoryId,
             ]);

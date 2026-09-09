@@ -4,7 +4,7 @@ namespace App\Class\Contract;
 
 class ContractSignatoryService extends AbstractContractService
 {
-    public function sign(string $repositoryId, string $contractId, int $userId, string $role, string $ipAddress, ?string $deviceFingerprint = null): array
+    public function sign(string $repositoryId, string $contractId, string $userId, string $role, string $ipAddress, ?string $deviceFingerprint = null): array
     {
         $this->execute(
             'INSERT INTO CTRContractSignatory

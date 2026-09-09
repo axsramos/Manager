@@ -25,10 +25,13 @@ class ContractReadService extends AbstractContractService
     public function contracts(string $repositoryId, array $filters = []): array
     {
         $conditions = ['RepositoryId = :repository_id']; $parameters = [':repository_id' => $repositoryId];
-        foreach (['Status', 'UserId', 'ConcurrencyGroupId', 'ParentContractId'] as $field) {
+        foreach (['Status', 'UserId', 'ConcurrencyGroupId', 'ParentContractId', 'Client'] as $field) {
             if (($filters[$field] ?? '') !== '') { $parameter = ':' . strtolower($field); $conditions[] = $field . ' = ' . $parameter; $parameters[$parameter] = $filters[$field]; }
         }
-        return $this->fetchAll('SELECT Id, RepositoryId, UserId, ParentContractId, ConcurrencyGroupId, Status, BillingCycle, StartDate, EndDate, CreatedAt FROM CTRContract WHERE ' . implode(' AND ', $conditions) . ' ORDER BY CreatedAt DESC', $parameters);
+        foreach (['Description'] as $field) {
+            if (($filters[$field] ?? '') !== '') { $parameter = ':' . strtolower($field); $conditions[] = $field . ' LIKE ' . $parameter; $parameters[$parameter] = '%' . $filters[$field] . '%'; }
+        }
+        return $this->fetchAll('SELECT Id, RepositoryId, UserId, Description, Client, ParentContractId, ConcurrencyGroupId, Status, BillingCycle, StartDate, EndDate, CreatedAt FROM CTRContract WHERE ' . implode(' AND ', $conditions) . ' ORDER BY CreatedAt DESC', $parameters);
     }
 
     public function contract(string $repositoryId, string $contractId): ?array

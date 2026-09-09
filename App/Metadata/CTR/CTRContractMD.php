@@ -13,6 +13,7 @@ class CTRContractMD
     ];
     public const TABLE_IDX = [
         ['IX_CTRContract_User_Status_Group' => ['RepositoryId', 'UserId', 'Status', 'ConcurrencyGroupId']],
+        ['IX_CTRContract_UserId' => ['UserId']],
         ['IX_CTRContract_Parent' => ['ParentContractId']],
     ];
     public const TABLE_CHECK = [];
@@ -21,6 +22,8 @@ class CTRContractMD
         'Id',
         'RepositoryId',
         'UserId',
+        'Description',
+        'Client',
         'ParentContractId',
         'ConcurrencyGroupId',
         'Status',
@@ -33,7 +36,9 @@ class CTRContractMD
     public const FIELDS_MD = [
         'Id' => ['Type' => 'char', 'Length' => 36, 'Required' => true, 'Default' => null, 'LongLabel' => 'Contrato', 'ShortLabel' => 'Contrato', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'RepositoryId' => ['Type' => 'string', 'Length' => 65, 'Required' => true, 'Default' => null, 'LongLabel' => 'Repositório', 'ShortLabel' => 'Rep.', 'TextPlaceholder' => '', 'TextHelp' => ''],
-        'UserId' => ['Type' => 'int', 'Length' => 10, 'Required' => true, 'Default' => null, 'LongLabel' => 'Usuário', 'ShortLabel' => 'Usuário', 'TextPlaceholder' => '', 'TextHelp' => ''],
+        'UserId' => ['Type' => 'string', 'Length' => 65, 'Required' => true, 'Default' => null, 'LongLabel' => 'Usuário', 'ShortLabel' => 'Usuário', 'TextPlaceholder' => '', 'TextHelp' => ''],
+        'Description' => ['Type' => 'string', 'Length' => 255, 'Required' => false, 'Default' => null, 'LongLabel' => 'Descrição do contrato', 'ShortLabel' => 'Descrição', 'TextPlaceholder' => '', 'TextHelp' => ''],
+        'Client' => ['Type' => 'string', 'Length' => 255, 'Required' => false, 'Default' => null, 'LongLabel' => 'Cliente', 'ShortLabel' => 'Cliente', 'TextPlaceholder' => 'CNPJ, e-mail ou nome', 'TextHelp' => ''],
         'ParentContractId' => ['Type' => 'char', 'Length' => 36, 'Required' => false, 'Default' => null, 'LongLabel' => 'Contrato anterior', 'ShortLabel' => 'Anterior', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'ConcurrencyGroupId' => ['Type' => 'int', 'Length' => 10, 'Required' => true, 'Default' => null, 'LongLabel' => 'Grupo de Concorrência', 'ShortLabel' => 'Grupo', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'Status' => ['Type' => 'string', 'Length' => 20, 'Required' => true, 'Default' => 'Draft', 'LongLabel' => 'Status', 'ShortLabel' => 'Status', 'TextPlaceholder' => '', 'TextHelp' => ''],

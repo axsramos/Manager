@@ -195,6 +195,11 @@ class SimpleMigrator
 
                 if (!$this->columnExists($table, $field)) {
                     $this->execute('ALTER TABLE ' . $this->id($table) . ' ADD COLUMN ' . $this->columnSql($field, $class::FIELDS_MD[$field], in_array($field, $class::FIELDS_PK, true)));
+                    continue;
+                }
+
+                if (!$this->columnMatches($table, $field, $class::FIELDS_MD[$field], in_array($field, $class::FIELDS_PK, true))) {
+                    $this->execute('ALTER TABLE ' . $this->id($table) . ' MODIFY COLUMN ' . $this->columnSql($field, $class::FIELDS_MD[$field], in_array($field, $class::FIELDS_PK, true)));
                 }
             }
 
@@ -407,6 +412,28 @@ class SimpleMigrator
         return (bool) $stmt->fetchColumn();
     }
 
+    private function columnMatches(string $table, string $column, array $metadata, bool $primaryKey = false): bool
+    {
+        if ($this->dryRun) {
+            return true;
+        }
+
+        $stmt = $this->pdo->prepare('SELECT COLUMN_TYPE, IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :schema AND TABLE_NAME = :table AND COLUMN_NAME = :column LIMIT 1');
+        $stmt->execute([':schema' => $this->database, ':table' => $table, ':column' => $column]);
+        $columnInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$columnInfo) {
+            return true;
+        }
+
+        $expectedType = $this->normalizeColumnType($this->columnType($metadata));
+        $currentType = $this->normalizeColumnType((string) $columnInfo['COLUMN_TYPE']);
+        $expectedNullable = !($primaryKey || ($metadata['Required'] ?? false));
+        $currentNullable = strtoupper((string) $columnInfo['IS_NULLABLE']) === 'YES';
+
+        return $expectedType === $currentType && $expectedNullable === $currentNullable;
+    }
+
     private function hasPrimaryKey(string $table): bool
     {
         if ($this->dryRun) {
@@ -521,6 +548,15 @@ class SimpleMigrator
     private function isTextType(string $type): bool
     {
         return in_array(strtoupper($type), ['TEXT', 'MEDIUMTEXT', 'LONGTEXT', 'JSON'], true);
+    }
+
+    private function normalizeColumnType(string $type): string
+    {
+        $type = strtoupper(trim($type));
+        $type = preg_replace('/\s+/', ' ', $type) ?? $type;
+        $type = preg_replace('/^(INT|BIGINT)\(\d+\)$/', '$1', $type) ?? $type;
+
+        return $type;
     }
 
     private function foreignKeyAction(string $action): string

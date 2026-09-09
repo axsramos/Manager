@@ -3,6 +3,7 @@
 namespace App\Controllers\Contract;
 
 use App\Class\Contract\ConcurrencyGroupService;
+use App\Metadata\CTR\CTRConcurrencyGroupMD;
 
 class ConcurrencyGroup extends AbstractContractController
 {
@@ -12,6 +13,11 @@ class ConcurrencyGroup extends AbstractContractController
     {
         try { $repositoryId = $this->repositoryId(); $records = $this->read->groups($repositoryId); } catch (\Throwable $exception) { $this->error($exception); $records = []; }
         $design = $this->design('Grupos de concorrência', 'ContractFlow > Grupos de concorrência', [$this->tab('Consulta', '/Contract/ConcurrencyGroup'), $this->tab('Novo grupo', '/Contract/ConcurrencyGroup/Show')], 0, 'ConcurrencyGroupViewList.php');
+        $fields = ['Id', 'Name', 'AllowMultipleActive'];
+        $design['Styles']['CSSFiles'] = ['dataTables'];
+        $design['Scripts']['Body'] = ['dataTables'];
+        $design['Fields'] = array_intersect_key(CTRConcurrencyGroupMD::FIELDS_MD, array_flip($fields));
+        $design['Hidden'] = [];
         $this->view('SBAdmin/Contract/ConcurrencyGroupView', ['FormDesign' => $design, 'FormData' => $records]);
     }
 

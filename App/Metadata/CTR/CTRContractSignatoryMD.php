@@ -29,7 +29,7 @@ class CTRContractSignatoryMD
         'Id' => ['Type' => 'int', 'Length' => 10, 'Required' => true, 'Default' => null, 'AutoIncrement' => true, 'LongLabel' => 'Signatário', 'ShortLabel' => 'Sign.', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'RepositoryId' => ['Type' => 'string', 'Length' => 65, 'Required' => true, 'Default' => null, 'LongLabel' => 'Repositório', 'ShortLabel' => 'Rep.', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'ContractId' => ['Type' => 'char', 'Length' => 36, 'Required' => true, 'Default' => null, 'LongLabel' => 'Contrato', 'ShortLabel' => 'Contrato', 'TextPlaceholder' => '', 'TextHelp' => ''],
-        'UserId' => ['Type' => 'int', 'Length' => 10, 'Required' => true, 'Default' => null, 'LongLabel' => 'Usuário', 'ShortLabel' => 'Usuário', 'TextPlaceholder' => '', 'TextHelp' => ''],
+        'UserId' => ['Type' => 'string', 'Length' => 65, 'Required' => true, 'Default' => null, 'LongLabel' => 'Usuário', 'ShortLabel' => 'Usuário', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'Role' => ['Type' => 'string', 'Length' => 50, 'Required' => true, 'Default' => null, 'LongLabel' => 'Papel', 'ShortLabel' => 'Papel', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'SignedAt' => ['Type' => 'datetime', 'Length' => 0, 'Required' => true, 'DefaultSql' => 'CURRENT_TIMESTAMP', 'LongLabel' => 'Assinado em', 'ShortLabel' => 'Assinado', 'TextPlaceholder' => '', 'TextHelp' => ''],
         'IpAddress' => ['Type' => 'string', 'Length' => 45, 'Required' => true, 'Default' => null, 'LongLabel' => 'IP', 'ShortLabel' => 'IP', 'TextPlaceholder' => '', 'TextHelp' => ''],

@@ -1,4 +1,77 @@
 <?php require_once App\Core\Config::$DIR_BASE . '/App/Views/SBAdmin/Contract/ContractViewHelpers.php'; ?>
-<form class="mb-3" method="get" action="/Contract/Contract"><div class="form-row"><div class="col-md-3 mb-2"><input class="form-control" name="UserId" placeholder="Usuário" value="<?= ctr_e($data['Filters']['UserId'] ?? ''); ?>"></div><div class="col-md-3 mb-2"><select class="form-control" name="Status"><option value="">Todos os status</option><?php foreach (['Draft', 'Active', 'Superseded', 'Expired', 'Canceled'] as $status): ?><option value="<?= $status; ?>" <?= (($data['Filters']['Status'] ?? '') === $status) ? 'selected' : ''; ?>><?= $status; ?></option><?php endforeach; ?></select></div><div class="col-md-4 mb-2"><select class="form-control" name="ConcurrencyGroupId"><option value="">Todos os grupos</option><?php foreach ($data['Groups'] as $group): ?><option value="<?= (int) $group['Id']; ?>" <?= ((string) ($data['Filters']['ConcurrencyGroupId'] ?? '') === (string) $group['Id']) ? 'selected' : ''; ?>><?= ctr_e($group['Name']); ?></option><?php endforeach; ?></select></div><div class="col-md-2 mb-2"><button class="btn btn-outline-secondary btn-block">Filtrar</button></div></div></form>
-<div class="d-flex justify-content-between align-items-center mb-2"><span><?= count($data['FormData']); ?> contrato(s)</span><a class="btn btn-primary" href="/Contract/Contract/Show">Novo contrato</a></div>
-<div class="table-responsive"><table class="table table-bordered table-hover table-sm"><thead><tr><th>Status</th><th>Usuário</th><th>Grupo</th><th>Ciclo</th><th>Vigência</th><th>Criação</th><th></th></tr></thead><tbody><?php foreach ($data['FormData'] as $row): ?><tr><td><?= ctr_status($row['Status']); ?></td><td><?= (int) $row['UserId']; ?></td><td><?= (int) $row['ConcurrencyGroupId']; ?></td><td><?= ctr_e($row['BillingCycle']); ?></td><td><?= ctr_date($row['StartDate']); ?><br><?= ctr_date($row['EndDate']); ?></td><td><?= ctr_date($row['CreatedAt']); ?></td><td class="text-nowrap"><a class="btn btn-sm btn-outline-primary" href="/Contract/Contract/Show/<?= rawurlencode($row['Id']); ?>">Abrir</a></td></tr><?php endforeach; ?></tbody></table></div>
+<?php $groupNames = array_column($data['Groups'] ?? [], 'Name', 'Id'); ?>
+<?php if (($data['SelectedFilter']['Value'] ?? '') !== ''): ?><div class="form-group"><label><?= ctr_e($data['SelectedFilter']['Label']); ?></label><input class="form-control" name="<?= ctr_e($data['SelectedFilter']['Field']); ?>" value="<?= ctr_e($data['SelectedFilter']['Value']); ?>" readonly></div><?php endif; ?>
+<section>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Consulta retornou <?= count($data['FormData']); ?> registro(s)
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <?php
+                if ($data['FormData']) {
+                    echo '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">';
+                    echo '    <thead>';
+                    echo '        <tr>';
+                    foreach ($data['FormDesign']['Fields'] as $key => $field) {
+                        $hidden = (in_array($key, $data['FormDesign']['Hidden']) ? 'hidden' : '');
+                        echo '            <th ' . $hidden . '>' . $field['ShortLabel'] . '</th>';
+                    }
+                    echo '        </tr>';
+                    echo '    </thead>';
+                    echo '    <tfoot>';
+                    echo '        <tr>';
+                    foreach ($data['FormDesign']['Fields'] as $key => $field) {
+                        $hidden = (in_array($key, $data['FormDesign']['Hidden']) ? 'hidden' : '');
+                        echo '            <th ' . $hidden . '>' . $field['ShortLabel'] . '</th>';
+                    }
+                    echo '        </tr>';
+                    echo '    </tfoot>';
+                    echo '    <tbody>';
+                    foreach ($data['FormData'] as $item) {
+                        echo '        <tr>';
+                        $isFirst = true;
+                        foreach ($data['FormDesign']['Fields'] as $key => $field) {
+                            $hidden = (in_array($key, $data['FormDesign']['Hidden']) ? 'hidden' : '');
+                            $value = $item[$key] ?? '';
+                            if ($key === 'ConcurrencyGroupId') {
+                                $value = $groupNames[$item[$key] ?? ''] ?? $value;
+                            }
+                            if (in_array($key, ['StartDate', 'EndDate', 'CreatedAt'], true)) {
+                                $value = ctr_date($value);
+                            }
+                            if ($key === 'Status') {
+                                $value = ctr_status((string) $value);
+                            } else {
+                                $value = ctr_e((string) $value);
+                            }
+                            if ($key === 'UserId') {
+                                echo '<td ' . $hidden . '><a href="/Contract/Contract/User/' . rawurlencode((string) $item[$key]) . '">' . $value . '</a></td>';
+                            } elseif ($key === 'Client' && (string) ($item[$key] ?? '') !== '') {
+                                echo '<td ' . $hidden . '><a href="/Contract/Contract/Client/' . rawurlencode((string) $item[$key]) . '">' . $value . '</a></td>';
+                            } elseif ($key === 'ConcurrencyGroupId') {
+                                echo '<td ' . $hidden . '><a href="/Contract/Contract/Group/' . rawurlencode((string) $item[$key]) . '">' . $value . '</a></td>';
+                            } elseif ($isFirst) {
+                                $isFirst = false;
+                                echo '<td ' . $hidden . '><a href="' . $data['FormDesign']['Tabs']['Items'][1]['Link'] . rawurlencode((string) $item[$key]) . '">' . $value . '</a></td>';
+                            } else {
+                                echo '<td ' . $hidden . '>' . $value . '</td>';
+                            }
+                        }
+                        echo '        </tr>';
+                    }
+                    echo '    </tbody>';
+                    echo '</table>';
+                } else {
+                    echo '<div class="text-center text-muted mb-3">';
+                    echo '<div><i class="fas fa-inbox fa-6x"></i></div>';
+                    echo '<p><h3>Este repositório está vazio.</h3></p>';
+                    echo '<p>Os dados serão exibidos aqui.</p>';
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</section>
